@@ -60,9 +60,9 @@ class DATABASE_CONFIG {
 		'persistent' => false,
 		'host' => 'localhost',
 		'encoding' => 'UTF8',
-		'login' => 'eugenie',
-		'password' => 'eugenie',
-		'database' => 'eugenie_staging',
+		'login' => '',
+		'password' => '',
+		'database' => '',
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
