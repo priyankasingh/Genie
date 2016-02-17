@@ -64,6 +64,18 @@ if (!defined('APP_DIR')) {
  */
 //define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'lib');
 
+/** Priyanka added this from cake 2.8 file
+ * This auto-detects CakePHP as a composer installed library.
+ * You may remove this if you are not planning to use composer (not recommended, though).
+ */
+$vendorPath = ROOT . DS . APP_DIR . DS . 'Vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'lib';
+$dispatcher = 'Cake' . DS . 'Console' . DS . 'ShellDispatcher.php';
+if (!defined('CAKE_CORE_INCLUDE_PATH') && file_exists($vendorPath . DS . $dispatcher)) {
+	define('CAKE_CORE_INCLUDE_PATH', $vendorPath);
+}
+
+
+
 /**
  * Editing below this line should NOT be necessary.
  * Change at your own risk.
@@ -76,9 +88,11 @@ if (!defined('WWW_ROOT')) {
 	define('WWW_ROOT', dirname(__FILE__) . DS);
 }
 
-// for built-in server
-if (php_sapi_name() == 'cli-server') {
-	if ($_SERVER['REQUEST_URI'] !== '/' && file_exists(WWW_ROOT . $_SERVER['REQUEST_URI'])) {
+// for built-in server Commented out by Priyanka and the next 2 lines were added
+//if (php_sapi_name() == 'cli-server') {
+	//if ($_SERVER['REQUEST_URI'] !== '/' && file_exists(WWW_ROOT . $_SERVER['REQUEST_URI'])) {
+if (PHP_SAPI === 'cli-server') {
+	if ($_SERVER['REQUEST_URI'] !== '/' && file_exists(WWW_ROOT . $_SERVER['PHP_SELF'])) {
 		return false;
 	}
 	$_SERVER['PHP_SELF'] = '/' . basename(__FILE__);
