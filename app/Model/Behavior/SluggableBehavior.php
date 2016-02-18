@@ -82,7 +82,7 @@ class SluggableBehavior extends ModelBehavior
      * @return boolean true if save should proceed, false otherwise
      * @access public
      */
-    function beforeSave(Model $Model)
+    function beforeSave(Model $Model, $options = array())   // priyanka fixed decleration
     {
         $return = parent::beforeSave($Model);
 

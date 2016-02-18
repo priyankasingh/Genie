@@ -275,7 +275,7 @@ class TranslateBehavior extends ModelBehavior {
  * @param boolean $primary Did the find originate on $model.
  * @return array Modified results
  */
-	public function afterFind(Model $Model, $results, $primary) {
+	public function afterFind(Model $Model, $results, $primary=false) {   //priyanka changed declaration
 		$Model->virtualFields = $this->runtime[$Model->alias]['virtualFields'];
 		$this->runtime[$Model->alias]['virtualFields'] = $this->runtime[$Model->alias]['fields'] = array();
 		$locale = $this->_getLocale($Model);
@@ -322,7 +322,7 @@ class TranslateBehavior extends ModelBehavior {
  * @param Model $Model Model invalidFields was called on.
  * @return boolean
  */
-	public function beforeValidate(Model $Model) {
+	public function beforeValidate(Model $Model, $options = array()) {     // priyanka changed decleration
 		unset($this->runtime[$Model->alias]['beforeSave']);
 		$this->_setRuntimeData($Model);
 		return true;
@@ -406,7 +406,7 @@ class TranslateBehavior extends ModelBehavior {
  * @param boolean $created Whether or not the save created a record.
  * @return void
  */
-	public function afterSave(Model $Model, $created) {
+	public function afterSave(Model $Model, $created, $options = array()) {   // priyanka changed decleration
 		if (!isset($this->runtime[$Model->alias]['beforeValidate']) && !isset($this->runtime[$Model->alias]['beforeSave'])) {
 			return true;
 		}
