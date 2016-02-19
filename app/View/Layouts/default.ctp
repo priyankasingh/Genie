@@ -88,7 +88,7 @@
 							else {
 								echo $this->element('login-form');
 
-								echo "<div id='forgot'>" . $this->Html->link(__('Forgotten your Password?'), array('controller' => 'users', 'action' => 'forgot_password')) . "</div>";
+								echo "<div id='forgot'>" . $this->Html->link(__('Forgotten your Password?'), array('controller' => 'users', 'action' => 'forgot_password')) . "</div>"; 
 							}
 						?>
 						</div>
