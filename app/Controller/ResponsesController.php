@@ -153,6 +153,10 @@ class ResponsesController extends AppController {
 
 	}
 
+	public function login() {
+
+	}
+
 	public function my_network(){
 		// Has response?
 		$response_id = $this->Session->read( 'response' );
