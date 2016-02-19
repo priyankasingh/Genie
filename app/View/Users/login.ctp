@@ -2,11 +2,12 @@
 <?php if (AuthComponent::user('id')): ?>
 	<p><?php echo __('Welcome,'); ?> <?php echo AuthComponent::user('email') ?>!</p>
 	<p>
-		<?php echo $this->Html->link( __('LOGOUT'), array('controller'=>'users', 'action'=>'logout',), array('class'=>'logout') ); ?> / 
-		<?php echo $this->Html->link( __('MY ACCOUNT'), array('controller'=>'users', 'action'=>'index'), array('class'=>'my-account') ); ?>
+		<?php echo $this->Html->link( __('LOGOUT'), array('controller'=>'users', 'url'=>'logout',), array('class'=>'logout') ); ?> / 
+		<?php echo $this->Html->link( __('MY ACCOUNT'), array('controller'=>'users', 'url'=>'index'), array('class'=>'my-account') ); ?>
 	</p>
 <?php else: ?>
-	<?php echo $this->Form->create('User', array('controller'=>'Users', 'action' => 'login', 'class'=>'user-form'));?>
+	<?php echo $this->Form->create('User', array('controller'=>'Users', 'url' => 'login', 'class'=>'user-form'));?>
+	<!-- Priyanka Changed 'action'=>'login' to 'url'=> 'login -->
 	<fieldset>
 		<div class="row">
 			<?php echo $this->Form->input('email'); ?>

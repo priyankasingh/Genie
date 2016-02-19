@@ -154,7 +154,7 @@ class ResponsesController extends AppController {
 	}
 
 	public function login() {
-
+		
 	}
 
 	public function my_network(){
