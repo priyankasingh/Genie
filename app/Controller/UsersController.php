@@ -24,8 +24,7 @@ class UsersController extends AppController {
 
 	
 	public function login() {
-		//if ($this->request->is('post')) {
-			debug($this->Auth->login());
+		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				// Fetch response
 				$response = $this->User->Response->find('first', array(
@@ -44,11 +43,11 @@ class UsersController extends AppController {
 					$this->redirect( '/services/my-map/' );
 				}
 			} else {
-				$this->Session->setFlash( __('Invalid username or password, please try again. ') . '<a href="/users/forgot_password/">' . __("Click here if you've forgotten your password."). '</a>' );
+				($this->Session->setFlash( __('Invalid username or password, please try again. ') . '<a href="/users/forgot_password/">' . __("Click here if you've forgotten your password."). '</a>' ));
 			}
-		//} elseif($this->Auth->user('id')){
-		//	$this->redirect('/services/my-map/');
-		//}
+		} elseif($this->Auth->user('id')){
+			$this->redirect('/services/my-map/');
+		}
 	}
 
 	public function logout() {

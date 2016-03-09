@@ -2,7 +2,7 @@
 					<h2><?php echo __('Forgot Password'); ?></h2>
 					<?php if( empty( $success ) ): ?>
 						<?php
-							echo $this->Form->create('User', array('url'=>'forgot_password', 'class'=>'user-form'));
+							echo $this->Form->create('User', array('url'=>['action'=>'forgot_password'], 'class'=>'user-form')); //Priyanka Changed 'action'=>'login' to 'url'=> 'login
 							echo $this->Form->input('email', array('label'=>__('Please enter the email address you used to sign up, and a new password will be sent to you.')));
 						?>
 

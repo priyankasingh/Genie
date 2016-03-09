@@ -6,7 +6,7 @@
 		<?php echo $this->Html->link( __('MY ACCOUNT'), array('controller'=>'users', 'url'=>'index'), array('class'=>'my-account') ); ?>
 	</p>
 <?php else: ?>
-	<?php echo $this->Form->create('User', array('controller'=>'Users', 'url' => 'login', 'class'=>'user-form'));?>
+	<?php echo $this->Form->create('User', array('controller'=>'Users', 'url' => ['action'=>'login'], 'class'=>'user-form'));?>
 	<!-- Priyanka Changed 'action'=>'login' to 'url'=> 'login -->
 	<fieldset>
 		<div class="row">
