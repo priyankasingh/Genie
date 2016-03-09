@@ -24,15 +24,15 @@ class UsersController extends AppController {
 
 	
 	public function login() {
-
-		if ($this->request->is('post')) {
+		//if ($this->request->is('post')) {
+			debug($this->Auth->login());
 			if ($this->Auth->login()) {
 				// Fetch response
 				$response = $this->User->Response->find('first', array(
 					'fields'=>array('id','user_id'),
 					'conditions'=>array('Response.user_id'=>$this->Auth->user('id')),
 				));
-				$this->Session->write('response', $response['Response']['id'] );
+				echo $this->Session->write('response', $response['Response']['id'] );
 								
 				// Redirect
 				if( !empty( $this->request->data['User']['redirect'] ) ){
@@ -44,11 +44,11 @@ class UsersController extends AppController {
 					$this->redirect( '/services/my-map/' );
 				}
 			} else {
-				$this->Session->setFlash( __('Invalid username or password, please try again.') . '<a href="/users/forgot_password/">' . __("Click here if you\'ve forgotten your password."). '</a>' );
+				$this->Session->setFlash( __('Invalid username or password, please try again. ') . '<a href="/users/forgot_password/">' . __("Click here if you've forgotten your password."). '</a>' );
 			}
-		} elseif($this->Auth->user('id')){
-			$this->redirect('/services/my-map/');
-		}
+		//} elseif($this->Auth->user('id')){
+		//	$this->redirect('/services/my-map/');
+		//}
 	}
 
 	public function logout() {
