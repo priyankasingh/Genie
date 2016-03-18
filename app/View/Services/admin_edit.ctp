@@ -3,6 +3,14 @@
 	<fieldset>
 		<legend><?php echo __('Admin Edit Service'); ?></legend>
 	<?php
+		if (AuthComponent::user('role') != NULL && AuthComponent::user('role') != 'c') {
+			echo $this->Form->input('disable_editing',
+				array(
+					'label' => 'Disallow Champions from editing'
+				)
+			);
+		}
+		echo $this->Form->input('id');
 		echo $this->Form->input('id');
 		echo $this->Form->input('lang', array('label'=>'Language', 'options'=>Configure::read('Site.languages')));
 		echo $this->Form->input('name');
@@ -38,7 +46,7 @@
 		<h3>Videos</h3>
 		<div class="multi-rows">
 			<div class="multi-rows-inner">
-				<?php 
+				<?php
 				$numVids = empty( $this->request->data['Video'] ) ? 1 : count( $this->request->data['Video'] );
 				for( $i=0; $i<$numVids; $i++ ):
 				?>

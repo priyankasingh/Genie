@@ -92,5 +92,22 @@ class Statement extends AppModel {
 			'insertQuery' => ''
 		),
 	);
+        
+        public function getStatement($order = null) {
+		if ($order == null) {
+			return;
+		}
+		$data = $this->find('first',
+			array(
+				'conditions' => array(
+					'order' => $order
+				),
+				'contain' => array(
+					'Category'
+				)
+			)
+		);
+		return $data;
+	}
 
 }

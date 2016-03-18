@@ -72,6 +72,7 @@ class AppController extends Controller {
 			$this->layout = 'admin' ;
 		}
 		
+                //debug($this->Session->read($_SESSION['KCFINDER'])); // debugging session problem
 		// Ensure KCFINDER is set up properly
 		if( $this->Auth->user() && $this->Auth->user('is_admin') ){
 			$_SESSION['KCFINDER'] = array(
@@ -98,6 +99,35 @@ class AppController extends Controller {
 		
 		$this->set('overriden_response', $this->Session->read('response_replaced') );
 		
+                // Get number of modified services for currently logged in Facilitator
+		if ($this->Auth->user('role') == 'f') {
+		  $facilitatorId = $this->Auth->user('id');
+
+		  // Get updated records
+		  $facilitatorChampions = $this->User->find('all',
+		    array(
+		      'conditions' => array(
+		        'facilitator_id' => $facilitatorId,
+		      )
+		    )
+		  );
+
+		  $this->loadModel('ServiceEdit');
+		  $modifiedServicesForFacilitator = 0;
+		  foreach ($facilitatorChampions as $key => $value) {
+		  	$modifiedServicesForFacilitator += $this->ServiceEdit->find('count',
+		  		array(
+		  			'conditions' => array(
+		  				'user_id' => $value['User']['id'],
+		  				'approved' => 0
+		  			)
+		  		)
+		  	);
+		  }
+		  $this->set(compact('modifiedServicesForFacilitator'));
+		}
+                
+                
 		// Disable login
 		//$this->Auth->logout();
 		//$this->Session->setFlash( '<strong>Login and registration is currently disabled while we undergo maintenance.</strong> Thanks for your patience.' );

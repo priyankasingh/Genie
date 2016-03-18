@@ -18,7 +18,7 @@
 		echo $this->Html->script('lib/ckeditor/ckeditor.js');
 		echo $this->Html->script('jquery-ui-1.10.4.custom.min.js');
 		echo $this->Html->script('admin.js?v=2');
-		
+
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
@@ -35,6 +35,7 @@
 		<div id="content">
 
 			<?php echo $this->Session->flash(); ?>
+			<?php echo $this->Session->flash('auth'); ?>
 
 			<?php echo $this->fetch('content'); ?>
 
@@ -105,6 +106,22 @@
 					</li>
 					<?php endif; ?>
 
+					<?php if (AuthComponent::user('role') == 'f'): ?>
+					<li>
+					<?php
+					echo $this->Html->link(__('Recently modified services (' . $modifiedServicesForFacilitator . ')'),
+						array(
+							'controller' => 'services_edits',
+							'action' => 'index'
+						),
+						array(
+							'class' => 'modified_services_nav' . ($modifiedServicesForFacilitator ? '_new' : '')
+						)
+					);
+					?>
+					</li>
+					<?php endif ?>
+
 					<?php if( in_array( 'pages', $permitted_controllers ) ): ?>
 					<li><?php echo $this->Html->link(__('List Pages'), array('controller' => 'pages', 'action' => 'index')); ?>
 						<ul>
@@ -119,9 +136,6 @@
 
 				</ul>
 			</div>
-		</div>
-		<div id="footer">
-			<?php echo $this->Html->link( 'Built by OH Digital', 'http://ohdigital.co.uk' ); ?>
 		</div>
 	</div>
 	<?php //echo $this->element('sql_dump'); ?>

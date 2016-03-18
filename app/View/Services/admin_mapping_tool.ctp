@@ -4,7 +4,7 @@
 		<h3>Your Search</h3>
 		<p>Enter your search term below then select your chosen service from the list</p>
 		<?php
-			echo $this->Form->create('mappingSearch', array('action'=>'add'));
+			echo $this->Form->create('mappingSearch', array('url'=> ['action'=>'add']));
 			echo $this->Form->input('field', array('label' => 'Search field')); ?><img src="/img/ajax-loader-small.gif" alt="Loading..." class="ajax-loader" id="search-loader" />
 			<input type="hidden" id="serviceId" name="id" value="" />
 			

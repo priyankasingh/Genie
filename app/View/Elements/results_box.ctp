@@ -1,18 +1,18 @@
 <?php
 	$alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-	$members = array();
 	foreach ($network_members['NetworkMember'] as $key => $value) {
-		// pr($key);
-		// pr($value);
-		$members[$key]['name'] = $value['name'];
-		$interests = json_decode( str_replace('-', '', $value['Interests']));
 		// pr($interests);
-		foreach ($interests as $interest) {
-			$members[$key]['Interests'][] = $interest[0];
+		$memberInterests = array();
+		for ($i=1; $i <= 11; $i++) {
+			$decodedStatement = json_decode($value["Statement$i"]);
+			$network_members['NetworkMember'][$key]["Statement$i"] = $decodedStatement;
+
+			$memberInterests[] = Hash::extract($network_members, "NetworkMember.$key.Statement$i.{n}");
 		}
+		$network_members['NetworkMember'][$key]['allStatementsCategories'] = Hash::extract($memberInterests, "{n}.{n}");
+		$network_members['NetworkMember'][$key]['allStatementsCategories'] = Hash::filter($network_members['NetworkMember'][$key]['allStatementsCategories']);
 	}
-	// pr($members);
+	// pr($network_members);
 ?>
 <div id="results-box">
 	<?php if($parents):?>
@@ -24,21 +24,28 @@
 					<h2 class="results-list"><?php echo $categories[$parent_id];?></h2>
 					<ul class="aside-list">
 						<?php foreach($parent as $service):?>
+							<?php
+							// pr($service);
+							?>
 							<?php $twitter = isset($service['Twitter'])?$service['Twitter']:null;?>
-							<?php $services .= $this->element('results_service', array(
+							<?php
+							$services .= $this->element('results_service',
+								array(
 									'index' => $index,
 									'parent_id' => $parent_id,
 									'categories' => $categories,
 									'service' => $service,
 									'twitter' => $twitter,
-							));?>
+								)
+							);
+							?>
 							<li id="service-<?php echo $service['Service']['id'];?>" class="results-list">
 								<div class="clearfix">
 									<span class="number"><?php echo $alphabet[$index];?></span>
 									<div class="text-section">
-									
+
 										<h3><?php echo $service['Service']['name'];?> -
-											<span class="mark"><?php echo $service['Category'][0]['name'];?></span></h3>	
+											<span class="mark"><?php echo $service['Category'][0]['name'];?></span></h3>
 										<div class="text-box">
 											<h4><?php echo __('Where?'); ?></h4>
 											<p><?php echo $service['Service']['address_1'].', '.$service['Service']['address_2'].', '.$service['Service']['town'].', '.$service['Service']['postcode'];?></p>
@@ -58,7 +65,7 @@
 												<a href="<?php echo $service['Service']['facebook_url'];?>" class="facebook-link" target="_blank"><?php echo __('Facebook'); ?></a>
 											<?php endif;?>
 										</div>
-										
+
 									<?php if( empty( $service['Favourite'] ) ): ?>
 										<?php echo $this->Html->link( __('Favourite This'), array('controller'=>'favourites', 'action'=>'add', $service['Service']['id']), array('class'=>'favourite-link ajax') ); ?>
 									<?php else: ?>
@@ -67,7 +74,7 @@
 									</div>
 
 									<?php
-									echo $this->Html->link( __('Read More'), 
+									echo $this->Html->link( __('Read More'),
 										array(
 											'controller'=>'services',
 											'action'=>'index',
@@ -81,14 +88,21 @@
 									);
 									?>
 								</div>
-								<?php if (isset($service['Category'][0]['name'])): ?>
+
+								<?php
+								// get all service categories
+								$allServiceCategories = Hash::extract($service, "Category.{n}.CategoriesService.category_id");
+								?>
+								<?php if (!empty($allServiceCategories)): ?>
 								<?php
 								$peopleToLikeThis = array();
-								// $peopleToLikeThis[] = 'Miss Z';
 
-								foreach ($members as $key => $value) {
-									if (in_array($service['Category'][0]['name'], $value['Interests'])) {
-										$peopleToLikeThis[] = $value['name'];
+								foreach ($network_members['NetworkMember'] as $memberKey => $member) {
+									foreach ($member['allStatementsCategories'] as $categoryKey => $category) {
+										if (in_array($category, $allServiceCategories)) {
+											$peopleToLikeThis[] = $member['name'];
+											break;
+										}
 									}
 								}
 								// pr($peopleToLikeThis);
@@ -96,7 +110,7 @@
 								<?php if (!empty($peopleToLikeThis)): ?>
 								<p class="service-in-network-circle">
 									<?php echo implode(' + ', $peopleToLikeThis); ?>
-									
+
 									<?php if (count($peopleToLikeThis) > 1): ?>
 									like
 									<?php else: ?>
@@ -108,7 +122,10 @@
 								<?php endif ?>
 								<?php endif ?>
 							</li>
-						<?php $index++; endforeach;?>
+						<?php
+						$index++;
+						endforeach;
+						?>
 					</ul>
 				</li>
 			<?php endforeach;?>
@@ -123,12 +140,17 @@
 						<?php if($paginator->hasNext()) echo $paginator->next('Next',array('tag'=>false, 'class'=>'next ajax'));?>
 					</div>
 					<ul class="pager-list">
-						<?php echo $paginator->numbers(array(
-																'tag'=>'li',
-																'separator'=>'',
-																'class' => 'ajax',
-																'currentClass'=>'active',
-																'currentTag'=>'a'));?>
+						<?php
+						echo $paginator->numbers(
+							array(
+								'tag' => 'li',
+								'separator' => '',
+								'class' => 'ajax',
+								'currentClass' => 'active',
+								'currentTag' => 'a'
+							)
+						);
+						?>
 					</ul>
 				</div>
 			<?php endif;?>

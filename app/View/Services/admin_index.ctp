@@ -1,4 +1,25 @@
 <div class="services index">
+
+	<?php
+	echo $this->Form->create('Service',
+		array(
+			'type' => 'get',
+			'url' => array(
+				'action' => 'index'
+			),
+			'style' => 'width:200px;float:right;'
+		)
+	);
+	echo $this->Form->input('q',
+		array(
+			'type' => 'text',
+			'placeholder' => 'Search',
+			'label' => false,
+			'value' => $this->request->query('q')
+		)
+	);
+	echo $this->Form->end();
+	?>
 	<h2><?php echo __('Services'); ?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>

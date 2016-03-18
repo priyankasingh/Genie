@@ -5,14 +5,37 @@
 		</h2>
 		<?php // debug($selected_category_id ); ?>
 		<ul id="filter-list" class="category-<?php echo $selected_parent_id;?>">
-			<li class="<?php echo (!$selected_category_id || is_array($selected_category_id) && !empty($all_id) )?'active ':'';?> all-results category-<?php echo $selected_parent_id;?>">
-				<a href="<?php echo $this->Html->url( array('controller'=>'services', 'action'=>'index', $selected_parent_slug) ); ?>" class="ajax">
-					<?php echo __('All') ; ?>
-					<?php echo !empty($selected_parent_id) ? $categories[$selected_parent_id] : __('My Results');?>	
+			<li
+				class="
+				<?php
+				echo (!$selected_category_id || is_array($selected_category_id) && !empty($all_id) ) ? 'active ' : '';
+				?>
+				all-results
+				category-<?php echo $selected_parent_id;?>
+			">
+				<a
+					href="<?php
+						echo $this->Html->url(
+							array(
+								'controller' => 'services',
+								'action' => 'index',
+								$selected_parent_slug
+							)
+						);
+					?>"
+				>
+					<?php if (isset($top_three)): ?>
+						<?php echo __('My Top Results') ; ?>
+					<?php else: ?>
+						<?php echo __('All') ; ?>
+						<?php
+						echo !empty($selected_parent_id) ? $categories[$selected_parent_id] : __('My Results');
+						?>
+					<?php endif ?>
 				</a>
 			</li>
 			<?php foreach($sub_category_list as $sub_category): ?>
-				
+
 				<li class="
 				<?php
 				if(is_array($selected_category_id) && empty($all_id)){
@@ -29,9 +52,9 @@
 						<?php echo $sub_category['Category']['name'] ;?>
 					</a>
 				</li>
-				
+
 			<?php endforeach;?>
-			
+
 			<div class="clear"></div>
 		</ul>
 	<?php else: ?>

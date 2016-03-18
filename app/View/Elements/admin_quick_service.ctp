@@ -1,4 +1,4 @@
-<?php echo $this->Form->create('Service', array('action'=>'add')); ?>
+<?php echo $this->Form->create('Service', array('url'=> ['action'=>'add'])); ?>
 
 	<?php echo $this->Session->flash(); ?>
 

@@ -8,7 +8,7 @@
 	<meta name="robots" content="noindex">
 
 	<?php
-		$version_no = '2.0.10';
+		$version_no = '2.8.0';
 
 		echo $this->Html->meta('icon');
 
@@ -16,6 +16,7 @@
 		echo $this->Html->css('/css/ui-lightness/jquery-ui-1.10.4.custom.css');
 		echo $this->Html->css('all.css?v='.$version_no);
 		echo $this->Html->css('/js/lib/fancybox/jquery.fancybox-1.3.4.css');
+		echo $this->Html->css('multiple-select.css');
 
 		echo $this->Html->script('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
 		echo $this->Html->script('//code.jquery.com/jquery-migrate-1.2.1.min.js');
@@ -25,12 +26,31 @@
 		echo $this->Html->script('jquery.placeholder.js?v='.$version_no);
 		echo $this->Html->script('jquery.cookie.js?v='.$version_no);
 		echo $this->Html->script('lib.js?v='.$version_no);
+
 		echo $this->Html->script('jquery-ui-1.10.4.custom.min.js');
+		?>
+		<?php if (!($this->params['controller'] == 'services' && $this->params['action'] == 'availability')): ?>
+		<script>
+		$(document).ready(function(){
+			// JCF - page init
+			bindReady(function(){
+				jcf.customForms.replaceAll();
+			});
+		});
+		</script>
+		<?php endif ?>
+
+		<?php if ($this->params['controller'] == 'services' && $this->params['action'] == 'availability'): ?>
+		<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}"></script>
+		<?php endif ?>
+
+		<?php
 		echo $this->Html->script('main.js?v='.$version_no);
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
+		echo $this->fetch('pageScript');
 	?>
 
 	<!--[if IE 7]> <link href= "css/ie.css" rel= "stylesheet" media= "all" /> <![endif]-->
@@ -88,7 +108,7 @@
 							else {
 								echo $this->element('login-form');
 
-								echo "<div id='forgot'>" . $this->Html->link(__('Forgotten your Password?'), array('controller' => 'users', 'action' => 'forgot_password')) . "</div>"; 
+								echo "<div id='forgot'>" . $this->Html->link(__('Forgotten your Password?'), array('controller' => 'users', 'action' => 'forgot_password')) . "</div>";
 							}
 						?>
 						</div>
@@ -100,27 +120,104 @@
 								<li><?php echo $this->Html->link( $label, array_merge(array('language'=>$code),array_values($this->params['pass'])), array( 'class' => 'lang-'.$code ) ); ?></li>
 							<?php endforeach; ?>
 							</ul>
-							Change Language
+							<?php echo __('Change Language'); ?>
 						</div>
 						<?php endif; ?>
 					</div>
-						<strong class="logo"><?php echo $this->Html->link( __('EU-GENIE'), array('controller'=>'responses', 'action'=>'add') ); ?></strong>
+						<strong class="logo">
+							<?php
+							echo $this->Html->link( $this->Html->image('logo.png'),
+								array(
+									'controller'=>'responses',
+									'action'=>'add'
+								),
+								array(
+									'escape' => false
+								)
+							);
+							?>
+						</strong>
 						<div class="header-box">
 							<ul class="menu">
 								<?php if(!isset( $active_nav )) $active_nav = null; ?>
-								<li <?php if( $active_nav == 'home'): ?>class="active"<?php endif; ?>><?php echo $this->Html->link( __('Home'), array('controller'=>'responses', 'action'=>'add') ); ?></li>
-								<li><?php echo $this->Html->link( __('Questionnaire'), array('controller'=>'responses', 'action'=>'add', '#'=>'questionnaire'), array('class'=>'question-button') ); ?></li>
-								<li <?php if( $active_nav == 'my_plans'): ?>class="active"<?php endif; ?>><?php echo $this->Html->link( __('My EU-GENIE'), array('controller'=>'services', 'action'=>'index', 'my-map') ); ?></li>
-								<li <?php if( $active_nav == 'my_network'): ?>class="active"<?php endif; ?>><?php echo $this->Html->link( __('My Network'), array('controller' => 'responses', 'action' => 'my_network') ); ?></li>
-								<li <?php if( $active_nav == 'about'): ?>class="active"<?php endif; ?>><?php echo $this->Html->link( __('About'), array('controller'=>'pages', 'action'=>'view', 1) ); ?></li>
-								<li <?php if( $active_nav == 'contact'): ?>class="active"<?php endif; ?>><?php echo $this->Html->link( __('Contact'), array('controller' => 'contacts', 'action' => 'add') ); ?></li>
-								<!-- <li><a href="#">Patient Case Studies</a></li> -->
+								<li <?php if( $active_nav == 'home'): ?>class="active"<?php endif; ?>>
+									<?php
+									echo $this->Html->link( __('Home'),
+										array(
+											'controller'=>'responses',
+											'action'=>'add'
+										)
+									);
+									?>
+								</li>
+								<li>
+									<?php
+									echo $this->Html->link(__('Questionnaire'),
+										array(
+											'controller' => 'responses',
+											'action' => 'questionnaire_setup',
+										)
+									);
+									?>
+								</li>
+								<li <?php if( $active_nav == 'my_plans'): ?>class="active"<?php endif; ?>>
+									<?php
+									echo $this->Html->link( __('My EU-GENIE'),
+										array(
+											'controller'=>'services',
+											'action'=>'index',
+											'my-map'
+										)
+									);
+									?>
+								</li>
+								<li <?php if( $active_nav == 'my_network'): ?>class="active"<?php endif; ?>>
+									<?php
+									echo $this->Html->link( __('My Network'),
+										array(
+											'controller' => 'responses',
+											'action' => 'my_network'
+										)
+									);
+									?>
+								</li>
+								<li <?php if( $active_nav == 'activities_overview'): ?>class="active"<?php endif; ?>>
+									<?php
+									echo $this->Html->link( __('Activities Overview'),
+										array(
+											'controller' => 'services',
+											'action' => 'availability'
+										)
+									);
+									?>
+								</li>
+								<li <?php if( $active_nav == 'about'): ?>class="active"<?php endif; ?>>
+									<?php
+									echo $this->Html->link( __('About'),
+										array(
+											'controller'=>'pages',
+											'action'=>'view',
+											1
+										)
+									);
+									?>
+								</li>
+								<li <?php if( $active_nav == 'contact'): ?>class="active"<?php endif; ?>>
+									<?php
+									echo $this->Html->link( __('Contact'),
+										array(
+											'controller' => 'contacts',
+											'action' => 'add'
+										)
+									);
+									?>
+								</li>
 							</ul>
 							<form action="<?php echo $this->Html->url( array('controller'=>'services', 'action'=>'index') ); ?>" class="search-form placeholder-labels">
 								<fieldset>
 									<label for="GroupSearch"><?php echo __('Search for groups (e.g. "community centre" or "swimming")'); ?></label>
 									<input type="text" name="search" id="GroupSearch"  />
-									<input type="image" value="SEARCH" src="/img/btn-search.png" />
+									<input type="image" alt="SEARCH" src="/img/btn-search.png" />
 								</fieldset>
 							</form>
 						</div>
@@ -145,24 +242,26 @@
 				</div>
 				<div id="footer">
 					<div class="footer-box">
-
 						<a class="btn-twitter" target="_blank" href="http://twitter.com/<?php echo Configure::read('Site.twitter'); ?>"><?php echo __('Tweet us'); ?></a>
 						<ul class="logos">
-							<li><a href="http://eu-wise.com/"><img src="/img/logo-euwise.png"></a></li>
-							<li><a href="http://cordis.europa.eu/fp7/home_en.html"><img src="/img/logo-seventh.png"></a></li>
-							<li><a href="http://www.southampton.ac.uk/"><img src="/img/logo-southhampton.png"></a></li>
-							<li><a href="http://www.nihr.ac.uk/Pages/default.aspx"><img src="/img/logo-nhs.png"></a></li>
+							<li><a href="http://eu-wise.com/"><img alt="" src="/img/logo-euwise.png"></a></li>
+							<li><a href="http://cordis.europa.eu/fp7/home_en.html"><img alt="" src="/img/logo-seventh.png"></a></li>
+							<li><a href="http://www.southampton.ac.uk/"><img alt="" src="/img/logo-southhampton.png"></a></li>
+							<li><a href="http://www.nihr.ac.uk/Pages/default.aspx"><img alt="" src="/img/logo-nhs.png"></a></li>
 						</ul>
-							<?php /*<strong class="footer-logo2"><a target="_blank" href="http://www.nihr.ac.uk">NHS National Institute for Health Research</a></strong>
-							<p>Collaboration for Leadership in Applied Health Research<br/> and care (CLAHRC) for Greater Manchester</p>
-							<p><!-- The NHIR CLAHRC for Greater Manchester is a collaboration of Greater Manchester NHS Trusts and the University of Manchester and is part of the National Institute for Health Research<br/> -->
-							W: <a target="_blank" href="http://clahrc-gm.nihr.ac.uk">http://clahrc-gm.nihr.ac.uk</a> E: <a href="mailto:&#099;&#108;&#097;&#104;&#114;&#099;&#064;&#115;&#114;&#102;&#116;&#046;&#110;&#104;&#115;&#046;&#117;&#107;">&#099;&#108;&#097;&#104;&#114;&#099;&#064;&#115;&#114;&#102;&#116;&#046;&#110;&#104;&#115;&#046;&#117;&#107;</a></p>*/ ?>
 					</div>
-
+					<p style="text-align:right;">
+						<?php echo __('EU-GENIE is released under the'); ?>
+						<a target="_blank" href="http://opensource.org/licenses/gpl-2.0.php">General Public License</a>,
+						<?php echo __('it is'); ?>
+						<a target="_blank" href="https://github.com/priyankasingh/old-eu-genie"><?php echo __('open source'); ?></a>
+						<?php echo __('and free to use'); ?>.
+					</p>
 				</div>
 			</div>
 		</div>
 	</div>
 	<?php echo $this->Js->writeBuffer(); // Write cached scripts ?>
+	<?php echo $this->element('sql_dump'); ?>
 </body>
 </html>

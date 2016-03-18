@@ -27,6 +27,7 @@ class User extends AppModel {
 		's' => 'Super Administrator',
 		'r' => 'Researcher',
 		'f' => 'Facilitator',
+                'c' => 'Champion',
 	);
 	
 	public $adminWhitelist = array( // role => controllers
@@ -45,17 +46,31 @@ class User extends AppModel {
 			'contacts',
 		),
 		'r' => array(
+			'users',
+			'favourites',
+			'statements',
+			'conditions',
+			'responses',
+			'network_members',
+			'network_categories',
+			'network_types',
 			'services',
 			'categories',
+			'pages',
+			'contacts',
 		),
 		'f' => array(
 			'users',
-			'favourites',
-			'responses',
-			'network_members',
+			//'favourites',
+			//'responses',
+			//'network_members',
 			'services',
-			'categories',
-			'contacts',
+                        'services_edits',
+			//'categories',
+			//'contacts',
+		),
+                'c' => array(
+			'services',
 		),
 	);
 
@@ -161,12 +176,20 @@ class User extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
+		),
+                'ServiceEdit'
 	);
 
 // Generate/hash password on save.
 	public function beforeSave($options = array()) {
-		if( !empty( $this->data['User']['password'] ) ){
+		/*
+		 * Cannot assign a Facilitator to non-champion users
+		 */
+		if ($this->data['User']['role'] != 'c') {
+			$this->data['User']['facilitator_id'] = NULL;
+		}
+            
+                if( !empty( $this->data['User']['password'] ) ){
 			$this->data['User']['password'] = AuthComponent::password($this->data['User']['password']);
 		} else {
 			// Create a random password and send it to the user
@@ -209,5 +232,20 @@ class User extends AppModel {
 	public function isAdminPermitted( $role, $controller ){
 		if( !isset( $this->adminWhitelist[$role] ) ) return false;
 		return in_array( $controller, $this->adminWhitelist[$role] );
+	}
+        
+        public function getFacilitatorsList(){
+		$data = $this->find('list',
+			array(
+				'fields' => array(
+					'id',
+					'email'
+				),
+				'conditions' => array(
+					'User.role' => array('f')
+				)
+			)
+		);
+		return $data;
 	}
 }

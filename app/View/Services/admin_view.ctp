@@ -1,4 +1,11 @@
 <div class="services view">
+<?php
+pr($newestRevision);
+pr($previousRevision);
+?>
+</div>
+
+<div class="services view">
 <h2><?php  echo __('Service'); ?></h2>
 	<dl>
 		<dt><?php echo __('Id'); ?></dt>

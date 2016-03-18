@@ -53,7 +53,21 @@ class Response extends AppModel {
 		),
 	);
 
+        
+        public function beforeSave($options = array()) {
+		if (	 isset($this->data['TopInterest']['data'])
+				&& !empty($this->data['TopInterest']['data'])
+			) {
+			$this->data['TopInterest']['data'] = json_encode($this->data['TopInterest']['data']);
+		}
+		return true;
+	}
+
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
+
+
+	public $hasOne = 'TopInterest';
+
 
 /**
  * belongsTo associations

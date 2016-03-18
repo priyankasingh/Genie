@@ -6,18 +6,21 @@ App::uses('AppController', 'Controller');
  * @property User $User
  */
 class UsersController extends AppController {
+    
+    public $components = array('Paginator');
 
 // AUTH FUNCTIONALITY
 	function beforeFilter(){
 		parent::beforeFilter();
-		$this->Auth->allow('login', 'logout', 'forgot_password');
+		$this->Auth->allow('login', 'logout', 'forgot_password', 'check_for_new_service_updates');
 	}
 	
 	public function isAuthorized($user = null) {
 		// Only admin users can elevate permissions
 		if( $this->action == 'admin_edit' || $this->action == 'admin_add' ){
-            $this->Session->setFlash( __('Only super-administrators can add/edit user accounts.') );
-			return $user['role'] == 's';
+                        $this->Session->setFlash( __('Only super-administrators can add/edit user accounts.') );
+			//return $user['role'] == 's';
+                        return in_array($user['role'], array('s', 'f'));
         }
 		return parent::isAuthorized($user);
     }
@@ -72,7 +75,7 @@ class UsersController extends AppController {
 		$this->Session->write('response_replaced', true);
         
 		$this->redirect(array('admin'=>false, 'controller'=>'services', 'action'=>'index', 'my-map'));
-        $this->autoRender = false;
+                $this->autoRender = false;
     }
 
 	// Log out as another user
@@ -207,12 +210,80 @@ class UsersController extends AppController {
 		$this->set('user_id',$id);
 		$this->set('user_key',$key);
 	}
+        
+        
+        public function check_for_new_service_updates() {
+		App::uses('CakeEmail', 'Network/Email');
+
+		$this->loadModel('ServiceEdit');
+		$facilitators = $this->User->find('all',
+			array(
+		    'conditions' => array(
+		      'role' => 'f',
+		      'is_admin' => 1,
+		    ),
+		    'contain' => false
+		  )
+		);
+		// pr($facilitators);
+
+		foreach ($facilitators as $facilitatorKey => $facilitator) {
+			$newEdits = false;
+			$champions = $this->User->find('all',
+				array(
+					'conditions' => array(
+						'facilitator_id' => $facilitator['User']['id'],
+					),
+					'contain' => array(
+						'ServiceEdit' => array(
+							'conditions' => array(
+								'approved' => 0
+							)
+						)
+					)
+				)
+			);
+
+			foreach ($champions as $championKey => $champion) {
+				if (!empty($champion['ServiceEdit'])) {
+					$newEdits = true;
+				}
+			}
+
+			if ($newEdits) {
+				$email = new CakeEmail();
+				$email->from(array('noreply@eu-genie.org' => 'EU-GENIE'));
+				$email->to($facilitator['User']['email']);
+				$email->template('services_edits_notification');
+				$email->emailFormat('html');
+				$email->subject('New service modifications');
+
+				if ($email->send()) {
+					echo "Sent new services edits notification to " . $facilitator['User']['email'];
+				} else {
+					echo "Unable to send new services edits notification to " . $facilitator['User']['email'];
+				}
+				unset($email);
+			}
+		}
+
+		exit;
+
+	}
+        
+        
 
 // ADMIN
 
 	public function admin_index() {
-		$this->User->recursive = 0;
-		$this->set('users', $this->paginate());
+		//$this->User->recursive = 0;
+		//$this->set('users', $this->paginate());
+                $this->Paginator->settings['maxLimit'] = 1000;
+                $this->User->recursive = 0;
+                if ($this->Auth->user('role') === 'f') {
+                        $this->Paginator->settings['conditions'] = array('role' => array('c'));
+                }
+                $this->set('users', $this->Paginator->paginate('User'));
 	}
 
 	public function admin_view($id = null) {
@@ -220,7 +291,20 @@ class UsersController extends AppController {
 			throw new NotFoundException(__('Invalid user'));
 		}
 		$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
-		$this->set('user', $this->User->find('first', $options));
+		//$this->set('user', $this->User->find('first', $options));
+                $data = $this->User->find('first', $options);
+                
+                /*
+		 * Facilitators should only be able to view champions
+		 */
+		if ($this->Auth->user('role') === 'f') {
+			if ($data['User']['role'] != 'c') {
+				$this->Session->setFlash(__('You don\'t have permissions to view that user.'));
+				$this->redirect(array('action' => 'index'));
+			}
+		}
+
+		$this->set('user', $data);
 	}
 
 	public function admin_add() {
@@ -235,6 +319,17 @@ class UsersController extends AppController {
 		}
 		
 		$this->set( 'roles', $this->User->getRoles() );
+                
+                /*
+		 * Facilitators should only be able to add champions
+		 */
+		if ($this->Auth->user('role') === 'f') {
+			$this->render('admin_add_champion');
+		}
+
+		$this->set('facilitatorsList', $this->User->getFacilitatorsList());
+		$this->set('roles', $this->User->getRoles());
+                
 	}
 
 	public function admin_edit($id = null) {
@@ -254,9 +349,24 @@ class UsersController extends AppController {
 			}
 		} else {
 			$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
-			$this->request->data = $this->User->find('first', $options);
+			$data = $this->User->find('first', $options);
+                        $this->request->data = $data;
+                        //$this->request->data = $this->User->find('first', $options);
+                        
+                        /*
+			 * Facilitators should only be able to edit champions
+			 */
+			if ($this->Auth->user('role') === 'f') {
+				if ($data['User']['role'] != 'c') {
+					$this->Session->setFlash(__('You don\'t have permissions to view that user.'));
+					$this->redirect(array('action' => 'index'));
+				}
+                                $this->render('admin_edit_champion');
+			}
+                        
 		}
 		
+                $this->set('facilitatorsList', $this->User->getFacilitatorsList());
 		$this->set( 'roles', $this->User->getRoles() );
 	}
 
