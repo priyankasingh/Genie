@@ -30,14 +30,43 @@
 	// Services, responses etc
  	Router::connect('/:language', array('controller' => 'responses', 'action' => 'add' ), array('language' => '[a-z]{3}'));
 	Router::connect('/:language/services/*',array('controller'=>'services', 'action'=>'index'), array('language' => '[a-z]{3}'));
-	
+
+	Router::connect('/:language/activities-overview',
+		array(
+			'controller' => 'services',
+			'action' => 'availability'
+		),
+		array(
+			'language' => '[a-z]{3}'
+		)
+	);
+	Router::connect('/:language/activities-overview/*',
+		array(
+			'controller' => 'services',
+			'action' => 'availability'
+		),
+		array(
+			'language' => '[a-z]{3}'
+		)
+	);
+
+	Router::connect('/:language/questionnaire',
+		array(
+			'controller' => 'responses',
+			'action' => 'questionnaire_setup'
+		),
+		array(
+			'language' => '[a-z]{3}'
+		)
+	);
+
 	Router::connect('/:language/about', array('controller' => 'pages', 'action' => 'view', 1 ), array('language' => '[a-z]{3}'));
 	Router::connect('/:language/contact', array('controller' => 'contacts', 'action' => 'add'), array('language' => '[a-z]{3}'));
 	Router::connect('/:language/my-network', array('controller' => 'responses', 'action' => 'my_network'), array('language' => '[a-z]{3}'));
 
 	Router::connect('/:language/:controller/:action/*', array(), array('language' => '[a-z]{3}'));
-	
-	
+
+
 	Router::connect('/admin', array('controller' => 'services', 'action' => 'index', 'admin'=>true));
 	Router::connect('/admin/', array('controller' => 'services', 'action' => 'index', 'admin'=>true));
 

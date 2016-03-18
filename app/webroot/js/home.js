@@ -1,12 +1,11 @@
 $(document).ready(function() {
-
 	var removeNetworkMemberQuestions = function(){
 		$('.js-networkMemberQuestion').remove();
 	}
 
 	var addQuestionsForNetworkMembers = function () {
 		removeNetworkMemberQuestions();
-		
+
 		var networkMembers = $('[name^="data[NetworkMember]"][name*="[name]"][value!=""][value!="Name"]:not([name^="data[NetworkMember][-1]"])');
 		var questionTemplates = $('.question-categories-network-template');
 
@@ -156,7 +155,7 @@ $(document).ready(function() {
 		} else if($(this).is(':checked') && $(this).val() == '0'){
 			$(this).parents('.statement').find(".question-categories").fadeOut();
 		}
-    });
+	});
 
 	// QUESTIONNAIRE PAGINATION
 	function switchQuestionnairePage( forwards ){

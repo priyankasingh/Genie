@@ -1,8 +1,3 @@
-// JCF - page init
-bindReady(function(){
-	jcf.customForms.replaceAll();
-});
-
 // Font resize init
 (function($){
     $(function(){
@@ -13,7 +8,7 @@ bindReady(function(){
 // Clear inputs on focus
 (function($){
 	$(function() {
-	
+
 		var replaceableSelector = "input[type=text], input[type=email], textarea";
 
 		// Setup placeholder labels
@@ -56,16 +51,16 @@ bindReady(function(){
 		$('.print').click(function(){
 			window.print();
 		})
-		
+
 		// High contrast mode
 		var isContrast = $.cookie('contrast');
-                    
-		if( isContrast ){                                          
+
+		if( isContrast ){
 			$('body').addClass('high-contrast');
 		} else {
 			$('body').removeClass('high-contrast');
 		}
-		
+
 		$('#contrast-on').click(function(){
 			$('body').addClass('high-contrast');
 			$.cookie("contrast", 'contrast', { path: '/', expires: 7 });
@@ -75,7 +70,7 @@ bindReady(function(){
 			$('body').removeClass('high-contrast');
 			$.cookie("contrast", 'contrast', { path: '/', expires: -1 });
 		});
-		
+
 		// Network Type Dialog
 		/*$.fancybox({
 		    href : $(this).attr("href")
