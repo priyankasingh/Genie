@@ -29,11 +29,11 @@
         <p class="legend-desc">
           <em><?php echo __("Please tell us about your network of friends, family and others you're
           in contact with, to help us supply you with the most useful results"); ?>.</em>
-          <a
+         <!-- <a
             href="<?php echo $this->Html->url('/img/', true); ?>"
           >
             <?php echo __("For an example click here"); ?>
-          </a>.
+          </a>. -->
         </p>
         <p class="legend-desc"></p>
 

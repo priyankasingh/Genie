@@ -535,6 +535,8 @@ class ResponsesController extends AppController {
 		/**
 		 * Prepare for pages 3+ (Statement questions)
 		 */
+                
+                $this->loadModel("Statement");
 		$this->set('statementCount', count($this->Statement->find('all')));
 		$this->set('statement', $this->Statement->getStatement($pageNumber - 2));
 		$this->set(compact('pageNumber'));
