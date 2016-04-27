@@ -44,8 +44,8 @@ class Category extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 			'maxlength' => array(
-				'rule' => array('maxlength', 45),
-				'message' => 'The maximum allowed length is 45 characters.',
+				'rule' => array('maxlength', 75),
+				'message' => 'The maximum allowed length is 75 characters.',
 				'allowEmpty' => false,
 				'required' => true,
 				//'last' => false, // Stop validation after this rule

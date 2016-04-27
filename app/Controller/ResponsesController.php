@@ -143,7 +143,7 @@ class ResponsesController extends AppController {
 			/**
 			 * Validate top 3 interests
 			 */
-			if ($pageNumber == 14) {
+			if ($pageNumber == 16) {
 				$modelToValidate = 'TopInterest';
 				$this->loadModel('TopInterest');
 				$this->TopInterest->set($this->request->data);
@@ -200,7 +200,7 @@ class ResponsesController extends AppController {
 				}
 			}
 
-			if ($pageNumber == 14) {
+			if ($pageNumber == 16) {
 				// Delete all user's conditions
 				if (	 isset($this->request->data['TopInterest'])
 						&& !empty($this->request->data['TopInterest'])
@@ -541,7 +541,7 @@ class ResponsesController extends AppController {
 		$this->set('statement', $this->Statement->getStatement($pageNumber - 2));
 		$this->set(compact('pageNumber'));
 
-		if ($pageNumber == 14) {
+		if ($pageNumber == 16) {
 			// This needs to be based on the information from the session
 			$data = $this->Session->read('questionnaire.data');
 
