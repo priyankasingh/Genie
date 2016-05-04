@@ -55,7 +55,7 @@ class ResponsesController extends AppController {
 		 * Determines the max allowed step (the last completed + 1)
 		 * if choosen step is not allowed (URL manually changed) the user gets redirected
 		 */
-		$maxAllowed = $this->Session->read('questionnaire.params.maxProgress') + 1;
+		$maxAllowed = $this->Session->read('questionnaire.params.maxProgress') + 2;
 		if ($pageNumber > $maxAllowed) {
 		  $this->redirect('/questionnaire/' . $maxAllowed);
 		} else {
@@ -171,10 +171,10 @@ class ResponsesController extends AppController {
 			 */
 			if ($pageNumber == 1) {
 				// Delete all user's conditions
-				if (!empty($this->request->data['Condition'])) {
+		/* pg1 error		if (!empty($this->request->data['Condition'])) {
 					$conditionRemoved = Hash::remove($prevSessionData['Condition'], 'Condition');
 					$prevSessionData['Condition'] = $conditionRemoved;
-				}
+				} */
 			}
 
 			if ($pageNumber > 2) {
@@ -257,8 +257,8 @@ class ResponsesController extends AppController {
 					 */
 					if (!empty($currentSessionData['NetworkMember'])) {
 						foreach ($currentSessionData['NetworkMember'] as $key => $value) {
-							for ($i=1; $i <= 11; $i++) {
-								$tmpStatement = $value['Statement' . $i];
+							for ($i=1; $i <= 13; $i++) {
+								$tmpStatement = isset($value['Statement' . $i]);
 								$currentSessionData['NetworkMember'][$key]['Statement' . $i] = json_encode($tmpStatement);
 							}
 						}
@@ -303,7 +303,9 @@ class ResponsesController extends AppController {
 							'Statement8',
 							'Statement9',
 							'Statement10',
-							'Statement11'
+							'Statement11',
+                                                        'Statement12',
+                                                        'Statement13'
 						),
 						'TopInterest' => array(
 							'id',
@@ -881,7 +883,9 @@ class ResponsesController extends AppController {
 						'Statement8',
 						'Statement9',
 						'Statement10',
-						'Statement11'
+						'Statement11',
+                                                'Statement12',
+                                                'Statement13'
 					),
 					'NetworkCategory' => array(
 						'fields' => array(
@@ -918,7 +922,7 @@ class ResponsesController extends AppController {
 		 */
 		if (!empty($response['NetworkMember'])) {
 			foreach ($response['NetworkMember'] as $key => $value) {
-				for ($i=1; $i <= 11; $i++) {
+				for ($i=1; $i <= 13; $i++) {
 					$tmpStatement = $value['Statement' . $i];
 					$response['NetworkMember'][$key]['Statement' . $i] = json_decode($tmpStatement);
 				}

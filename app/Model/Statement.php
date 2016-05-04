@@ -28,8 +28,8 @@ class Statement extends AppModel {
  */
 	public $validate = array(
 		'statement' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
+			'notblank' => array(
+				'rule' => array('notblank'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,

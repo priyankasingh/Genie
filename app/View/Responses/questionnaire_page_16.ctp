@@ -19,6 +19,7 @@
       foreach ($this->request->data['ResponseStatement'] as $StatementKey => $statement) {
         foreach ($statement['Category'] as $categoryKey => $categoryId) {
           foreach ($categories as $key => $value) {
+              //echo $value['Category']['name'];
             if ($categoryId == $value['Category']['id']) {
               $options[$categoryId] = $value['Category']['name'];
               break;

@@ -19,6 +19,7 @@
       <div class="question-choice">
       <?php
         // Existing ResponseStatement?
+        if($pageNumber <=14 ){
         echo $this->Form->input('ResponseStatement.' . $statement['Statement']['id'] . '.weighting',
           array(
             'type' => 'radio',
@@ -30,7 +31,23 @@
             ),
             'legend' => $statement['Statement']['statement']
           )
-        );
+        );}
+        
+        if($pageNumber ==15 ){
+        echo $this->Form->input('ResponseStatement.' . $statement['Statement']['id'] . '.weighting',
+          array(
+            'type' => 'radio',
+            'default' => 0,
+            'options' => array(
+              0 => __('At home'),
+              1 => __('Through someone I know'),
+              2 => __('In a public space outside home'),
+              3 => __('I would like help with accessing the internet')
+            ),
+            'legend' => $statement['Statement']['statement']
+          )
+        );}
+        
         echo $this->Form->input('ResponseStatement.' . $statement['Statement']['id'] . '.statement_id',
           array(
             'type' => 'hidden',
@@ -49,21 +66,22 @@
       <div class="question-categories-wrapper">
         <div class="question-categories">
           <fieldset>
-            <legend><?php echo __('I am interested in the following things') ; ?></legend>
+            <legend><?php if($pageNumber <=14 ) echo __('I am interested in the following things') ; ?></legend>
             <?php
-            $options = array();
-            foreach( $statement['Category'] as $category ){
-              $options[$category['id']] = $category['name'];
+            if($pageNumber <=14 ){
+                $options = array();
+                foreach( $statement['Category'] as $category ){
+                  $options[$category['id']] = $category['name'];
+                }
+            
+                echo $this->Form->input('ResponseStatement.' . $statement['Statement']['id'] . '.Category',
+                  array(
+                    'options' => $options,
+                    'multiple' => 'checkbox',
+                    'label' => false
+                  )
+                );
             }
-            ?>
-            <?php
-            echo $this->Form->input('ResponseStatement.' . $statement['Statement']['id'] . '.Category',
-              array(
-                'options' => $options,
-                'multiple' => 'checkbox',
-                'label' => false
-              )
-            );
             ?>
           </fieldset>
 
