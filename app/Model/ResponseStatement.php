@@ -25,7 +25,7 @@ class ResponseStatement extends AppModel {
 	public $validate = array(
 		'weighting' => array(
 			'notempty' => array(
-				'rule' => array('range', -1, 3),
+				'rule' => array('range', -1, 4),
 				'message' => 'Invalid weighting',
 				'allowEmpty' => true,
 				'required' => true,
