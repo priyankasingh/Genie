@@ -55,7 +55,7 @@ class ResponsesController extends AppController {
 		 * Determines the max allowed step (the last completed + 1)
 		 * if choosen step is not allowed (URL manually changed) the user gets redirected
 		 */
-		$maxAllowed = $this->Session->read('questionnaire.params.maxProgress') + 2;
+		$maxAllowed = $this->Session->read('questionnaire.params.maxProgress') + 1;
 		if ($pageNumber > $maxAllowed) {
 		  $this->redirect('/questionnaire/' . $maxAllowed);
 		} else {
@@ -125,9 +125,10 @@ class ResponsesController extends AppController {
 									$existingNetworkMemberRemoved = false;
 								}
 							}
+                                                        
 							if ($existingNetworkMemberRemoved) {
-								unset($existingResponse['NetworkMember'][$key]);
-								$this->NetworkMember->delete($value);
+                                                            unset($existingResponse['NetworkMember'][$key]);
+                                                            $this->NetworkMember->delete($value);
 							}
 						}
 					}
@@ -162,6 +163,7 @@ class ResponsesController extends AppController {
 			 * Merge previous session data with submitted data
 			 */
 			$prevSessionData = $this->Session->read('questionnaire.data');
+                        //debugger::dump($prevSessionData);
 
 			/**
 			 * There's a catch with checkboxes
@@ -171,10 +173,10 @@ class ResponsesController extends AppController {
 			 */
 			if ($pageNumber == 1) {
 				// Delete all user's conditions
-		/* pg1 error		if (!empty($this->request->data['Condition'])) {
+				if (!empty($this->request->data['Condition'])) {
 					$conditionRemoved = Hash::remove($prevSessionData['Condition'], 'Condition');
 					$prevSessionData['Condition'] = $conditionRemoved;
-				} */
+				}
 			}
 
 			if ($pageNumber > 2) {
@@ -542,6 +544,8 @@ class ResponsesController extends AppController {
 		$this->set('statementCount', count($this->Statement->find('all')));
 		$this->set('statement', $this->Statement->getStatement($pageNumber - 2));
 		$this->set(compact('pageNumber'));
+                
+                //$this->set('subcategory', $this->ResponseController->Category->getSubCategory(50));
 
 		if ($pageNumber == 16) {
 			// This needs to be based on the information from the session

@@ -44,8 +44,8 @@ class Category extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 			'maxlength' => array(
-				'rule' => array('maxlength', 75),
-				'message' => 'The maximum allowed length is 75 characters.',
+				'rule' => array('maxlength', 80),
+				'message' => 'The maximum allowed length is 80 characters.',
 				'allowEmpty' => false,
 				'required' => true,
 				//'last' => false, // Stop validation after this rule
@@ -164,4 +164,10 @@ class Category extends AppModel {
 			'conditions' => array('parent_id =' => $id),
 		));
 	}
+        
+       /* public function getSubCategory($id){
+            return $this->find('first',  array(
+                'conditions'=>array('id =' => $id)
+            ));
+        }*/
 }
