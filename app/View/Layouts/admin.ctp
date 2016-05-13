@@ -121,6 +121,16 @@
 					?>
 					</li>
 					<?php endif ?>
+                                        
+                                        <?php //if(in_array('online_services', $permitted_controllers ) ): ?>
+					<li><?php echo $this->Html->link(__('List Online Services'), array('controller' => 'online_services', 'action' => 'index')); ?>
+						<ul>
+							<li><?php echo $this->Html->link(__('New Online Services'), array('controller' => 'online_services', 'action' => 'add')); ?> </li>
+						</ul>
+					</li>
+					<?php// endif; ?>
+                                        
+                                        
 
 					<?php if( in_array( 'pages', $permitted_controllers ) ): ?>
 					<li><?php echo $this->Html->link(__('List Pages'), array('controller' => 'pages', 'action' => 'index')); ?>

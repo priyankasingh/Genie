@@ -645,6 +645,8 @@ class ResponsesController extends AppController {
 				'ResponseStatement' => array('id','weighting','statement_id'),
 				'NetworkMember' => array('id','name','frequency','network_category_id','diagram_x','diagram_y','other', 'Interests'),
 			);
+                        //pr($this->request->data);
+                        //exit;
 			if( !$this->Auth->user('id') ){
 				// Prepare to save new user
 				$fieldList['User'] = array( 'email', 'password' );
