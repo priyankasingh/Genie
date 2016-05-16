@@ -43,7 +43,7 @@ class AppController extends Controller {
 				'action' => 'login',
 				'admin' => 0,
 			),
-			'authError' => "Sorry, you\'re not allowed to do that. You may need to log in first.",
+			'authError' => "Sorry, you're not allowed to do that. You may need to log in first.",
 			'authenticate' => array(
 				'Form' => array(
 					'fields' => array('username' => 'email', 'password' => 'password'),
@@ -60,7 +60,7 @@ class AppController extends Controller {
 	function beforeFilter(){
 		parent::beforeFilter();
 
-		$this->Auth->authError = __("Sorry, you\'re not allowed to do that. You may need to log in first.", true); 
+		$this->Auth->authError = __("Sorry, you're not allowed to do that. You may need to log in first.", true); 
 		
 		// Language redirection
 		if( empty( $this->request->params['admin'] ) && empty( $this->request->params['requested'] ) ) $this->_checkLanguage();
