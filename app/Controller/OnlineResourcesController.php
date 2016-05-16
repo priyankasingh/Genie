@@ -5,7 +5,7 @@ App::uses('AppController', 'Controller');
  *
  * @property Service $Service
  */
-class OnlineServicesController extends AppController {
+class OnlineResourcesController extends AppController {
     
     function beforeFilter(){
 	$this->Auth->allow(array('index', 'view'));
@@ -15,7 +15,7 @@ class OnlineServicesController extends AppController {
     //public $helpers = array('Html', 'Form');
 
     public function index() {
-        $this->set('online_services', $this->OnlineService->find('all'));
+        $this->set('onlineResources', $this->OnlineResource->find('all'));
     }
     
     /**
@@ -24,8 +24,8 @@ class OnlineServicesController extends AppController {
     * @return void
     */
     public function admin_index() {
-		$this->OnlineService->recursive = 0;
-		$this->set('online_services', $this->paginate());
+		$this->OnlineResource->recursive = 0;
+		$this->set('onlineResources', $this->paginate());
     }
     
     /**
@@ -36,11 +36,11 @@ class OnlineServicesController extends AppController {
     * @return void
     */
     public function admin_view($id = null) {
-	if (!$this->OnlineService->exists($id)) {
+	if (!$this->OnlineResource->exists($id)) {
             throw new NotFoundException(__('Invalid Online Service'));
 	}
 	
-	$this->set('online_service', $this->OnlineService->find('first', $options));
+	$this->set('onlineResources', $this->OnlineResource->find('first', $options));
     }
     
     
@@ -53,7 +53,7 @@ class OnlineServicesController extends AppController {
 	//$this->OnlineService->locale = array_keys( Configure::read('Site.languages') );
 	
 	if ($this->request->is('post')) {
-            $this->OnlineService->create();
+            $this->OnlineResource->create();
             if ($this->OnlineService->saveAssociated($this->request->data)) {
 		$this->Session->setFlash(__('The online service has been saved'));
                 $this->redirect(array('action' => 'index'));
@@ -61,7 +61,7 @@ class OnlineServicesController extends AppController {
 		$this->Session->setFlash(__('The online service could not be saved. Please, try again.'));
             }
 	}
-	$categories = $this->OnlineService->Category->find('list');
+	$categories = $this->OnlineResource->Category->find('list');
             $this->set(compact('categories'));
 	}
     

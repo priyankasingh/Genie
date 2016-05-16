@@ -1,7 +1,7 @@
 <div class="services index">
 
 	<?php
-	echo $this->Form->create('OnlineService',
+	echo $this->Form->create('OnlineResource',
 		array(
 			'type' => 'get',
 			'url' => array(
@@ -20,7 +20,7 @@
 	);
 	echo $this->Form->end();
 	?>
-	<h2><?php echo __('OnlineServices'); ?></h2>
+	<h2><?php echo __('Online Resources'); ?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
@@ -30,17 +30,17 @@
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
-	<?php foreach ($online_services as $online_service): ?>
+	<?php foreach ($online_resources as $online_resource): ?>
 	<tr>
-		<td><?php echo h($online_service['OnlineService']['id']); ?>&nbsp;</td>
-		<td><?php echo h($online_service['OnlineService']['name']); ?>&nbsp;</td>
-		<td><?php echo h($online_service['OnlineService']['url']); ?>&nbsp;</td>
-		<td><?php echo h($online_service['OnlineService']['created']); ?>&nbsp;</td>
-		<td><?php echo h($online_service['OnlineService']['modified']); ?>&nbsp;</td>
+		<td><?php echo h($online_resource['OnlineResource']['id']); ?>&nbsp;</td>
+		<td><?php echo h($online_resource['OnlineResource']['name']); ?>&nbsp;</td>
+		<td><?php echo h($online_resource['OnlineResource']['url']); ?>&nbsp;</td>
+		<td><?php echo h($online_resource['OnlineResource']['created']); ?>&nbsp;</td>
+		<td><?php echo h($online_resource['OnlineResource']['modified']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $online_service['OnlineService']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $online_service['OnlineService']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $online_service['OnlineService']['id']), null, __('Are you sure you want to delete # %s?', $online_service['OnlineService']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $online_resource['OnlineResource']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $online_resource['OnlineResource']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $online_resource['OnlineResource']['id']), null, __('Are you sure you want to delete # %s?', $online_resource['OnlineResource']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

@@ -122,13 +122,13 @@
 					</li>
 					<?php endif ?>
                                         
-                                        <?php //if(in_array('online_services', $permitted_controllers ) ): ?>
-					<li><?php echo $this->Html->link(__('List Online Services'), array('controller' => 'online_services', 'action' => 'index')); ?>
+                                        <?php //if(in_array('online_resources', $permitted_controllers ) ): ?>
+					<li><?php echo $this->Html->link(__('List Online Resources'), array('controller' => 'online_resources', 'action' => 'index')); ?>
 						<ul>
-							<li><?php echo $this->Html->link(__('New Online Services'), array('controller' => 'online_services', 'action' => 'add')); ?> </li>
+							<li><?php echo $this->Html->link(__('New Online Resources'), array('controller' => 'online_resources', 'action' => 'add')); ?> </li>
 						</ul>
 					</li>
-					<?php// endif; ?>
+					<?php //endif; ?>
                                         
                                         
 
