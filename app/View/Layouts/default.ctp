@@ -238,7 +238,8 @@
 							}
 						?>
 						<li class="<?php echo $class;?>">
-							<?php echo $this->Html->link( $parent_category['Category']['name'], array('controller'=>'services', 'action'=>'index', $parent_category['Category']['slug']), array('class'=>'ajax') ); ?>
+							<?php echo $this->Html->link( $parent_category['Category']['name'], array('controller'=>'services', 'action'=>'index', $parent_category['Category']['slug']), array('class'=>'ajax') );
+                                                        ?>
 						</li>
 						<?php endforeach;?>
 					</ul>
