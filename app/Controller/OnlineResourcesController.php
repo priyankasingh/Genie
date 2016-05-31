@@ -7,10 +7,10 @@ App::uses('AppController', 'Controller');
  */
 class OnlineResourcesController extends AppController {
     
-    function beforeFilter(){
+    /* function beforeFilter(){
 	$this->Auth->allow(array('index', 'view'));
 	parent::beforeFilter();
-}
+    }/*
     
     //public $helpers = array('Html', 'Form');
 
