@@ -28,6 +28,13 @@
 		echo $this->Html->script('lib.js?v='.$version_no);
 
 		echo $this->Html->script('jquery-ui-1.10.4.custom.min.js');
+                
+                // ipad fix
+                //echo $this->Html->script('//code.jquery.com/jquery.min.js');
+                //echo $this->Html->script('//code.jquery.com/ui/1.8.17/jquery-ui.min.js');
+                echo $this->Html->script('lib/touch-puncher/jquery.ui.touch-punch.min.js');
+                
+                
 		?>
 		<?php if (!($this->params['controller'] == 'services' && $this->params['action'] == 'availability')): ?>
 		<script>
