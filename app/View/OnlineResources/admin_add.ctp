@@ -4,7 +4,7 @@
 		<legend><?php echo __('Admin Add Online Resource'); ?></legend>
 	<?php
 		
-		echo $this->Form->input('title');
+		echo $this->Form->input('name');
 		echo $this->Form->input('url');
 		echo $this->Form->input('description');
                 echo $this->Form->input('Category');

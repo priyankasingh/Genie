@@ -7,10 +7,10 @@ App::uses('AppController', 'Controller');
  */
 class OnlineResourcesController extends AppController {
     
-    /* function beforeFilter(){
+    function beforeFilter(){
 	$this->Auth->allow(array('index', 'view'));
 	parent::beforeFilter();
-    }/*
+    }
     
     //public $helpers = array('Html', 'Form');
 
@@ -50,11 +50,11 @@ class OnlineResourcesController extends AppController {
     * @return void
     */
     public function admin_add() {
-	//$this->OnlineService->locale = array_keys( Configure::read('Site.languages') );
+	$this->OnlineResource->locale = array_keys( Configure::read('Site.languages') );
 	
 	if ($this->request->is('post')) {
             $this->OnlineResource->create();
-            if ($this->OnlineService->saveAssociated($this->request->data)) {
+            if ($this->OnlineResource->saveAssociated($this->request->data)) {
 		$this->Session->setFlash(__('The online service has been saved'));
                 $this->redirect(array('action' => 'index'));
             } else {
@@ -62,8 +62,8 @@ class OnlineResourcesController extends AppController {
             }
 	}
 	$categories = $this->OnlineResource->Category->find('list');
-            $this->set(compact('categories'));
-	}
+        $this->set(compact('categories'));
+    }
     
     
     

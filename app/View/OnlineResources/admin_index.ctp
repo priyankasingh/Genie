@@ -30,7 +30,7 @@
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
-	<?php foreach ($online_resources as $online_resource): ?>
+	<?php foreach ($onlineResources as $online_resource): ?>
 	<tr>
 		<td><?php echo h($online_resource['OnlineResource']['id']); ?>&nbsp;</td>
 		<td><?php echo h($online_resource['OnlineResource']['name']); ?>&nbsp;</td>

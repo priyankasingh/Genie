@@ -169,7 +169,7 @@
 								</li>
 								<li <?php if( $active_nav == 'my_plans'): ?>class="active"<?php endif; ?>>
 									<?php
-									echo $this->Html->link( __('My EU-GENIE'),
+									echo $this->Html->link( __('My GENIE'),
 										array(
 											'controller'=>'services',
 											'action'=>'index',
@@ -259,7 +259,7 @@
 						</ul>
 					</div>
 					<p style="text-align:right;">
-						<?php echo __('EU-GENIE is released under the'); ?>
+						<?php echo __('GENIE is released under the'); ?>
 						<a target="_blank" href="http://opensource.org/licenses/gpl-2.0.php">General Public License</a>,
 						<?php echo __('it is'); ?>
 						<a target="_blank" href="https://github.com/priyankasingh/old-eu-genie"><?php echo __('open source'); ?></a>

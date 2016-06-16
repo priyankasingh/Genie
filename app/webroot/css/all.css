@@ -481,7 +481,7 @@ input:-moz-placeholder { color:#404F59; }
 #nav li{
 	float:left;
 	margin:0 4px 0 0;
-	width:156px;
+	width:133px;  /* Changes the size of navigation box */
 }
 #nav a{
 	display:block;
@@ -507,11 +507,11 @@ input:-moz-placeholder { color:#404F59; }
 	padding-bottom: 12px;
 }
 
-
 #nav .category-1 a{background:#c3e76f;}
 #nav .category-7 a{background:#ff9b43;}
 #nav .category-13 a{background:#ff7876;}
 #nav .category-15 a{background:#4ecdc4;}
+#nav .category-23 a{background:#72c271;}
 #nav .category-19 a{
 	background:#6c51a2;
 	font-size:17px;
@@ -523,13 +523,13 @@ input:-moz-placeholder { color:#404F59; }
 #nav .category-43 a{
 	background:#ff0000;
 	font-size:17px;
-	line-height:18px;
+	line-height:30px;
 	padding:6px 0 5px;
 	height:34px !important;
 }
 
 
-#nav .category-23 a{background:#72c271;}
+
 #nav .category-1 a:hover{background:#e4eec4;}
 #nav .category-7 a:hover{background:#fdd3ac;}
 #nav .category-13 a:hover{background:#fac8c9;}
@@ -1025,7 +1025,7 @@ div.service.category-43 h3,
 
 .category-43 .aside-list .more{
 	background:url(../img/btn-dark-green.png) no-repeat;
-	color: #3c663b;
+	color: #ff0000;
 }
 
 
