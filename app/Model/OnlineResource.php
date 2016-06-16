@@ -37,7 +37,7 @@ class OnlineResource extends AppModel {
 	public $validate = array(
 		'name' => array(
 			'notempty' => array(
-				'rule' => array('notempty'),
+				'rule' => array('notblank'),
 				'message' => 'Name cannot be omitted',
 				'allowEmpty' => false,
 				'required' => true,
