@@ -521,7 +521,7 @@ input:-moz-placeholder { color:#404F59; }
 }
 
 #nav .category-43 a{
-	background:#ff0000;
+	background:#ce78ff;
 	font-size:17px;
 	line-height:30px;
 	padding:6px 0 5px;
@@ -536,10 +536,11 @@ input:-moz-placeholder { color:#404F59; }
 #nav .category-15 a:hover{background:#a0d8d5;}
 #nav .category-19 a:hover{background:#dcdaed;}
 #nav .category-23 a:hover{background:#c6e3c1;}
-#nav .category-43 a:hover{background:#ff0000;}
-/*#main{
+#nav .category-43 a:hover{background:#f1c5ff;}
+
+#main{
 	overflow:hidden;
-}*/
+}
 .main-holder{
 	overflow:hidden;
 	padding:21px 0 17px;
@@ -751,7 +752,7 @@ input:-moz-placeholder { color:#404F59; }
 }
 
 .category-43 h2{
-	background:#ff0000;
+	background:#ce78ff;
 }
 
 
@@ -858,7 +859,7 @@ div.service.category-23 h3,
 div.service.category-43 h2,
 div.service.category-43 h3,
 .category-43 h4{
-	color:#ff0000;
+	color:#680094;
 }
 
 .aside .number{
@@ -881,7 +882,7 @@ div.service.category-43 h3,
 .category-13 .results-list:hover, .category-13 .results-list.active{background-color:#fac8c9;}
 .category-15 .results-list:hover, .category-15 .results-list.active{background-color:#a0d8d5;}
 .category-19 .results-list:hover, .category-19 .results-list.active{background-color:#dcdaed;}
-.category-43 .results-list:hover, .category-43 .results-list.active{background-color:#ff0000;}
+.category-43 .results-list:hover, .category-43 .results-list.active{background-color:#e8c2fd;}
 
 .category-23 .results-list:hover{
 	background-color: #c6e3c1;
@@ -913,8 +914,8 @@ div.service.category-43 h3,
 }
 
 .category-43 .number{
-	color: #ff0000;
-	background:url(../img/ico-dark-green.png) no-repeat;
+	color: #ce78ff;
+	background:url(../img/ico-magenta.png) no-repeat;
 }
 
 
@@ -968,7 +969,7 @@ div.service.category-43 h3,
 }
 
 .category-43 .aside-list h3 .mark{
-	color: #ff0000;
+	color: #5a217b;
 	font-weight:normal;
 }
 .aside .favourite-link{
@@ -1024,8 +1025,8 @@ div.service.category-43 h3,
 }
 
 .category-43 .aside-list .more{
-	background:url(../img/btn-dark-green.png) no-repeat;
-	color: #ff0000;
+	background:url(../img/btn-magenta.png) no-repeat;
+	color: #ce78ff;
 }
 
 
@@ -1904,7 +1905,7 @@ a.close:hover{
 
 .oh-pin.category-43{
 	color: #3c663b;
-	background:url(../img/pin-dark-green.png) no-repeat;
+	background:url(../img/pin-magenta.png) no-repeat;
 }
 
 .favourites .oh-pin{
@@ -1938,7 +1939,7 @@ a.close:hover{
 
 .oh-pin.category-43:hover, .oh-pin.category-43.active{
 	color: #3c663b;
-	background:url(../img/pin-dark-green-hover.png) no-repeat;
+	background:url(../img/pin-magenta-hover.png) no-repeat;
 }
 
 
@@ -1983,7 +1984,7 @@ h2#filter-label.category-23{
 }
 
 h2#filter-label.category-43{
-	color: #3c663b;
+	color: #bd7fe0;
 }
 ul#filter-list{
 	float:left;
@@ -2022,8 +2023,8 @@ ul#filter-list{
 }
 
 #filter-list li.category-43{
-	color: #404f59;
-	background:#72c271;
+	color: #5f3d72;
+	background:#cc8df1;
 }
 
 
@@ -2119,7 +2120,7 @@ ul#filter-list{
 }
 
 .category-43 .twitter-link{
-	background: url(../img/twitter-dark-green.png) no-repeat;
+	background: url(../img/twitter-magenta.png) no-repeat;
 }
 
 
@@ -2146,7 +2147,7 @@ ul#filter-list{
 }
 
 .category-43 .facebook-link{
-	background: url(../img/facebook-dark-green.png) no-repeat;
+	background: url(../img/facebook-magenta.png) no-repeat;
 }
 
 .category-1 .twitter-link,
@@ -2183,7 +2184,7 @@ ul#filter-list{
 .category-43 .twitter-link,
 .category-43 .facebook-link,
 .category-43 .twitter a{
-	color: #ff0000;
+	color: #5f3775;
 }
 .info-box p{
 	margin-bottom: 6px;
@@ -2211,7 +2212,7 @@ ul#filter-list{
 }
 
 .category-43 .twitter li{
-	background: url(../img/twitter-dark-green.png) no-repeat 0px 24px;
+	background: url(../img/twitter-magenta.png) no-repeat 0px 24px;
 }
 
 
@@ -2239,7 +2240,7 @@ ul#filter-list{
 }
 
 .category-43 .twitter li .text{
-	border-color: #72c271;
+	border-color: #ce78ff;
 }
 
 
@@ -2559,7 +2560,7 @@ a.street-start img{
 	}
         
         .oh-pin.category-43:after {
-		content: url('../img/pin-dark-green.png');
+		content: url('../img/pin-magenta.png');
 		position: relative;
 		bottom: 60px;
 		z-index: -1 !important;

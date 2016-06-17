@@ -262,7 +262,7 @@
 						<?php echo __('GENIE is released under the'); ?>
 						<a target="_blank" href="http://opensource.org/licenses/gpl-2.0.php">General Public License</a>,
 						<?php echo __('it is'); ?>
-						<a target="_blank" href="https://github.com/priyankasingh/old-eu-genie"><?php echo __('open source'); ?></a>
+						<a target="_blank" href="https://github.com/priyankasingh/Genie"><?php echo __('open source'); ?></a>
 						<?php echo __('and free to use'); ?>.
 					</p>
 				</div>

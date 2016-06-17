@@ -65,8 +65,8 @@ class OnlineResource extends AppModel {
 	public $hasAndBelongsToMany = array(
 		'Category' => array(
 			'className' => 'Category',
-			'joinTable' => 'categories_services',
-			'foreignKey' => 'service_id',
+			'joinTable' => 'categories_online_resources',
+			'foreignKey' => 'online_resource_id',
 			'associationForeignKey' => 'category_id',
 			'unique' => 'keepExisting',
 			'conditions' => '',

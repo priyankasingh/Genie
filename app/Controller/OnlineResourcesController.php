@@ -39,7 +39,7 @@ class OnlineResourcesController extends AppController {
 	if (!$this->OnlineResource->exists($id)) {
             throw new NotFoundException(__('Invalid Online Service'));
 	}
-	
+	$options = array('conditions' => array('OnlineResource.' . $this->OnlineResource->primaryKey => $id));
 	$this->set('onlineResources', $this->OnlineResource->find('first', $options));
     }
     
@@ -50,15 +50,16 @@ class OnlineResourcesController extends AppController {
     * @return void
     */
     public function admin_add() {
-	$this->OnlineResource->locale = array_keys( Configure::read('Site.languages') );
+	//$this->OnlineResource->locale = array_keys( Configure::read('Site.languages') );
 	
 	if ($this->request->is('post')) {
             $this->OnlineResource->create();
-            if ($this->OnlineResource->saveAssociated($this->request->data)) {
-		$this->Session->setFlash(__('The online service has been saved'));
+            debug($this->request->data);
+            if ($this->OnlineResource->save($this->request->data)) {
+		$this->Session->setFlash(__('The online resource has been saved'));
                 $this->redirect(array('action' => 'index'));
             } else {
-		$this->Session->setFlash(__('The online service could not be saved. Please, try again.'));
+		$this->Session->setFlash(__('The online resource could not be saved. Please, try again.'));
             }
 	}
 	$categories = $this->OnlineResource->Category->find('list');
