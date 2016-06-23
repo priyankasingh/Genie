@@ -195,7 +195,7 @@ function bindLinks(){
 					location.href = url;
 				}
 			}).fail(function() {
-				alert("An error occurred. Please refresh the page or try again later");
+				alert("1 An error occurred. Please refresh the page or try again later");
 			});
 		}
 	});
@@ -269,7 +269,7 @@ $(function() {
 		$('#loadingspinner').fadeOut();
 
 	  }).fail(function() {
-			alert("An error occurred. Please refresh the page or try again later");
+			alert("2. An error occurred. Please refresh the page or try again later");
 			$('#loadingspinner').fadeOut();
 	  });
 	}

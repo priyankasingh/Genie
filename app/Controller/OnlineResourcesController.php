@@ -16,6 +16,7 @@ class OnlineResourcesController extends AppController {
 
     public function index() {
         $this->set('onlineResources', $this->OnlineResource->find('all'));
+        pr($onlineResources);
     }
     
     /**

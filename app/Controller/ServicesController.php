@@ -74,10 +74,29 @@ class ServicesController extends AppController {
 		$this->layout = 'default';
 		$this->render('index');
 	}
-
+        
+        public function index_os($selected_parent_slug = null, $selected_category_slug = null, $selected_service_slug = null)
+        {
+            if($selected_parent_slug == "online-support" )
+                {
+                    pr("hello!");
+                    $this->view='index_os';
+                }
+                
+            
+        }
 
 	public function index($selected_parent_slug = null, $selected_category_slug = null, $selected_service_slug = null){
-
+                
+            
+                if($selected_parent_slug == "online-support" )
+                {   
+                    //$this->index_os();
+                    pr("hello!");
+                    $this->render('index_os');
+                    
+                    $this->controller="OnlineResources/index";
+                }
 		// Get network members
 		// Has response?
 		$this->loadModel('Response');
@@ -89,16 +108,15 @@ class ServicesController extends AppController {
 					'NetworkMember'
 				),
 			)) : false;
-
+                
 		// pr($network_members);
 		$this->set('network_members', $response);
-
 
 		if($selected_service_slug){
 			// VIEW INDIVIDUAL SERVICE
 			$selected_service_id = $this->Service->getIdFromSlug($selected_service_slug);
 			$this->setAction('view', $selected_parent_slug, $selected_category_slug, $selected_service_slug);
-		}
+                }
 
 		$conditions = array();
 		$joins = array();
@@ -187,13 +205,17 @@ class ServicesController extends AppController {
 		// NORMAL CATEGORIES
 			if($selected_parent_slug){
 				$selected_parent_id = $this->Service->Category->getIdFromSlug($selected_parent_slug);
-			}
+			
+                                pr($selected_parent_id);
+                        }
 			if($selected_category_slug){
 				$selected_category_id = $this->Service->Category->getIdFromSlug($selected_category_slug);
-			}
+                                pr($selected_category_id);
+                                
+                        }
 		}
 
-		// pr($sub_category_list);
+		//pr($sub_category_list);
 
 		if($selected_parent_id || $selected_category_id){
 			if($selected_parent_id){
