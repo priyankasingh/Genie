@@ -93,8 +93,29 @@ class OnlineResourcesController extends AppController {
                 $categories = $this->OnlineResource->Category->find('list');
 		$this->set(compact('categories'));
                 
-                
         }
+        
+        
+ /**
+ * admin_delete method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_delete($id = null) {
+		$this->OnlineResource->id = $id;
+		if (!$this->OnlineResource->exists()) {
+			throw new NotFoundException(__('Invalid online resource'));
+		}
+		$this->request->onlyAllow('post', 'delete');
+		if ($this->OnlineResource->delete()) {
+			$this->Session->setFlash(__('Online resource deleted'));
+			$this->redirect(array('action' => 'index'));
+		}
+		$this->Session->setFlash(__('Online resource was not deleted'));
+		$this->redirect(array('action' => 'index'));
+	}
 
 			
     
