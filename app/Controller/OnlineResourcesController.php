@@ -67,6 +67,38 @@ class OnlineResourcesController extends AppController {
         $this->set(compact('categories'));
     }
     
+ /**
+ * admin_edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_edit($id = null) {
+		if (!$this->OnlineResource->exists($id)) {
+			throw new NotFoundException(__('Online resource does not exist'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+                    if( $this->OnlineResource->save( $this->request->data ) ){
+				$this->Session->setFlash(__('The online resource has been saved'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The category could not be saved. Please, try again.'));
+			}
+                } else {
+                    $options = array('conditions' => array('OnlineResource.' . $this->OnlineResource->primaryKey => $id));
+                    $this->request->data = $this->OnlineResource->find('first', $options);
+                }
+                
+                $categories = $this->OnlineResource->Category->find('list');
+		$this->set(compact('categories'));
+                
+                
+        }
+
+			
+    
+    
     
     
     
