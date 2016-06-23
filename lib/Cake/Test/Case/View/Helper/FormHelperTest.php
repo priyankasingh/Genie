@@ -1598,6 +1598,28 @@ class FormHelperTest extends CakeTestCase {
 	}
 
 /**
+ * test reset unlockFields, when create new form.
+ *
+ * @return void
+ */
+	public function testResetUnlockFields() {
+		$this->Form->request['_Token'] = array(
+			'key' => 'testKey',
+			'unlockedFields' => array()
+		);
+
+		$this->Form->unlockField('Contact.id');
+		$this->Form->create('Contact');
+		$this->Form->hidden('Contact.id', array('value' => 1));
+		$this->assertEmpty($this->Form->fields, 'Field should be unlocked');
+		$this->Form->end();
+
+		$this->Form->create('Contact');
+		$this->Form->hidden('Contact.id', array('value' => 1));
+		$this->assertEquals(1, $this->Form->fields['Contact.id'], 'Hidden input should be secured.');
+	}
+
+/**
  * testTagIsInvalid method
  *
  * @return void
@@ -3906,6 +3928,25 @@ class FormHelperTest extends CakeTestCase {
 			'option A',
 			'/label',
 			'br' => array(),
+			array('input' => array('type' => 'radio', 'name' => 'data[Model][field]', 'value' => '1', 'id' => 'ModelField1')),
+			array('label' => array('for' => 'ModelField1')),
+			'option B',
+			'/label',
+			'/fieldset'
+		);
+		$this->assertTags($result, $expected);
+
+		$result = $this->Form->radio('Model.field', array('option A', 'option B'), array('fieldset' => 'classy-stuff'));
+		$expected = array(
+			'fieldset' => array('class' => 'classy-stuff'),
+			'legend' => array(),
+			'Field',
+			'/legend',
+			'input' => array('type' => 'hidden', 'name' => 'data[Model][field]', 'value' => '', 'id' => 'ModelField_'),
+			array('input' => array('type' => 'radio', 'name' => 'data[Model][field]', 'value' => '0', 'id' => 'ModelField0')),
+			array('label' => array('for' => 'ModelField0')),
+			'option A',
+			'/label',
 			array('input' => array('type' => 'radio', 'name' => 'data[Model][field]', 'value' => '1', 'id' => 'ModelField1')),
 			array('label' => array('for' => 'ModelField1')),
 			'option B',
@@ -8118,6 +8159,34 @@ class FormHelperTest extends CakeTestCase {
 	}
 
 /**
+ * Test that postLink doesn't modify the fields in the containing form.
+ *
+ * postLink() calls inside open forms should not modify the field list
+ * for the form.
+ *
+ * @return void
+ */
+	public function testPostLinkSecurityHashInline() {
+		$hash = Security::hash(
+			'/posts/delete/1' .
+			serialize(array()) .
+			'' .
+			Configure::read('Security.salt')
+		);
+		$hash .= '%3A';
+		$this->Form->request->params['_Token']['key'] = 'test';
+
+		$this->Form->create('Post', array('url' => array('action' => 'add')));
+		$this->Form->input('title');
+		$this->Form->postLink('Delete', '/posts/delete/1', array('inline' => false));
+		$result = $this->View->fetch('postLink');
+
+		$this->assertEquals(array('Post.title'), $this->Form->fields);
+		$this->assertContains($hash, $result, 'Should contain the correct hash.');
+		$this->assertAttributeEquals('/posts/add', '_lastAction', $this->Form, 'lastAction was should be restored.');
+	}
+
+/**
  * Test using postLink with N dimensional data.
  *
  * @return void
@@ -8669,6 +8738,36 @@ class FormHelperTest extends CakeTestCase {
 			'/div'
 		);
 		$this->assertTags($result, $expected);
+	}
+
+/**
+ * Test that the action key still uses the model as the implicit controller
+ * when the url option is undefined. While the action parameter is deprecated
+ * we need it to continue working for the duration of 2.x
+ *
+ * @return void
+ */
+	public function testCreateUrlImpliedController() {
+		$restore = error_reporting(E_ALL ^ E_USER_DEPRECATED);
+		$this->Form->request['controller'] = 'posts';
+		$result = $this->Form->create('Comment', array(
+			'action' => 'addComment',
+			'id' => 'addCommentForm',
+			'type' => 'POST'
+		));
+		$expected = array(
+			'form' => array(
+				'action' => '/comments/addComment',
+				'id' => 'addCommentForm',
+				'method' => 'post',
+				'accept-charset' => strtolower(Configure::read('App.encoding'))
+			),
+			'div' => array('style' => 'display:none;'),
+			'input' => array('type' => 'hidden', 'name' => '_method', 'value' => 'POST'),
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+		error_reporting($restore);
 	}
 
 /**
