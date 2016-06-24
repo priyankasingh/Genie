@@ -1,17 +1,24 @@
-<div id="category-description">
-    
-<div id="parent-helper" <?php if(isset($active_nav) && $active_nav == 'my_plans') echo "class='serviceParent'"; ?>></div>
-<?php 
-if( !empty( $parent_category ) ) echo $parent_category['Category']['description'];
-?>
-</div>
-
-<?php echo $this->element('category_filter', array(
-	'sub_category_list' => isset($sub_category_list)?$sub_category_list:null,
-	'categories' => $categories,
-	'selected_parent_id' => $selected_parent_id,
-	'selected_parent_slug' => $selected_parent_slug,
-));?>
+<div class="content-box <?php if( !empty( $favourites ) ) echo 'favourites '; ?>">
+	<div id="category-description">
+		<div id="parent-helper" <?php if(isset($active_nav) && $active_nav == 'my_plans') echo "class='serviceParent'"; ?>></div>
+		<?php
+		//if(isset($active_nav) && $active_nav == 'my_plans') echo "<h2>HOLLA</h2>";
+		?>
+	<?php
+	if( !empty( $parent_category )) echo $parent_category['Category']['description'];
+	echo $parent_category['Category']['id'];
+        ?>
+	</div>
+        <?php
+		echo $this->element('category_filter',
+			array(
+				'sub_category_list' => isset($sub_category_list)?$sub_category_list:null,
+				'categories' => isset($categories)?$categories:null,
+				'selected_parent_id' => isset($selected_parent_id)?$selected_parent_id:null,
+				'selected_parent_slug' => isset($selected_parent_slug)?$selected_parent_slug:null,
+			)
+		);
+	?>
 
 <div class="aside">
     <a class="print" href="#"><?php echo __('Print Your results'); ?></a>

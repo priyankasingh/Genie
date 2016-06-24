@@ -74,17 +74,7 @@ class ServicesController extends AppController {
 		$this->layout = 'default';
 		$this->render('index');
 	}
-        
-        public function index_os($selected_parent_slug = null, $selected_category_slug = null, $selected_service_slug = null)
-        {
-            if($selected_parent_slug == "online-support" )
-                {
-                    pr("hello!");
-                    $this->view='index_os';
-                }
-                
-            
-        }
+
 
 	public function index($selected_parent_slug = null, $selected_category_slug = null, $selected_service_slug = null){
                 
