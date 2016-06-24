@@ -79,14 +79,14 @@ class ServicesController extends AppController {
 	public function index($selected_parent_slug = null, $selected_category_slug = null, $selected_service_slug = null){
                 
             
-                if($selected_parent_slug == "online-support" )
-                {   
+               // if($selected_parent_slug == "online-support" )
+                //{   
                     //$this->index_os();
-                    pr("hello!");
-                    $this->render('index_os');
+                   // pr("hello!");
+                   // $this->render('index_os');
                     
-                    $this->controller="OnlineResources/index";
-                }
+                   // $this->controller="OnlineResources/index";
+               // }
 		// Get network members
 		// Has response?
 		$this->loadModel('Response');
