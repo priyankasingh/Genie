@@ -78,15 +78,6 @@ class ServicesController extends AppController {
 
 	public function index($selected_parent_slug = null, $selected_category_slug = null, $selected_service_slug = null){
                 
-            
-               // if($selected_parent_slug == "online-support" )
-                //{   
-                    //$this->index_os();
-                   // pr("hello!");
-                   // $this->render('index_os');
-                    
-                   // $this->controller="OnlineResources/index";
-               // }
 		// Get network members
 		// Has response?
 		$this->loadModel('Response');
@@ -196,11 +187,11 @@ class ServicesController extends AppController {
 			if($selected_parent_slug){
 				$selected_parent_id = $this->Service->Category->getIdFromSlug($selected_parent_slug);
 			
-                                pr($selected_parent_id);
+                                //pr($selected_parent_id);
                         }
 			if($selected_category_slug){
 				$selected_category_id = $this->Service->Category->getIdFromSlug($selected_category_slug);
-                                pr($selected_category_id);
+                                //pr($selected_category_id);
                                 
                         }
 		}

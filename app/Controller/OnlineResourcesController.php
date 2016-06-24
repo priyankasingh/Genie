@@ -14,10 +14,136 @@ class OnlineResourcesController extends AppController {
     
     //public $helpers = array('Html', 'Form');
 
-    public function index() {
-        pr("test");
+    public function index($selected_parent_slug = null, $selected_category_slug = null, $selected_service_slug = null) {
+        
+        
         $this->set('onlineResources', $this->OnlineResource->find('all'));
-        pr($onlineResources);
+        pr($selected_parent_slug);
+        pr($selected_category_slug);
+        pr($selected_service_slug);
+        
+        // Get network members
+	// Has response?
+        
+        $this->loadModel('Response');
+        $response_id = $this->Session->read( 'response' );
+        $response = $response_id ? $this->Response->find('first',
+                array(
+                        'conditions' => array('Response.id' => $response_id ),
+                        'contain' => array(
+                                'NetworkMember'
+                        ),
+                )) : false;
+        //pr($response);
+       // pr($network_members);
+	$this->set('network_members', $response);
+        
+        $this->loadModel('Service');
+        //if($selected_service_slug){
+            
+		// VIEW INDIVIDUAL SERVICE
+        //        $selected_service_id = $this->Service->getIdFromSlug($selected_service_slug);
+        //        $this->setAction('view', $selected_parent_slug, $selected_category_slug, $selected_service_slug);
+       // }
+
+        $conditions = array();
+        $joins = array();
+
+        $selected_parent_id = null;
+        $selected_category_id = null;
+        
+        
+        if( $selected_parent_slug == 'favourites' ){
+        // FAVOURITES
+                // Logged in only
+                if( !$this->Auth->user('id') ){
+                        $this->Session->setFlash(__('Please log in to view favourites.'));
+                        $this->redirect(array('controller'=>'users', 'action' => 'login'));
+                }
+
+
+                $this->loadModel('Favourite');
+                $faves = $this->Favourite->find('all', array(
+                        'conditions'=>array(
+                                'Favourite.user_id' => $this->Auth->user('id'),
+                                'Favourite.deleted' => null,
+                        ),
+                ));
+                $faveIDs = array();
+                foreach( $faves as $fave ) $faveIDs[] = $fave['Favourite']['service_id'];
+
+                $conditions['Service.id'] = $faveIDs;
+
+                // Set query and view vars
+                $this->set('favourites', true);
+        } else {
+        // NORMAL CATEGORIES
+                
+                if($selected_parent_slug){
+                        $selected_parent_id = $this->OnlineResource->Category->getIdFromSlug($selected_parent_slug);
+
+                        pr($selected_parent_id);
+                }
+                if($selected_category_slug){
+                        $selected_category_id = $this->OnlineResource->Category->getIdFromSlug($selected_category_slug);
+                        pr($selected_category_id);
+
+                }
+        }
+        
+        //pr($sub_category_list);
+        
+        if($selected_parent_id || $selected_category_id){
+                if($selected_parent_id){
+                        $conditions['Category.parent_id'] = $selected_parent_id;
+                        $sub_category_list = $this->OnlineResource->Category->getChildrenOfCategoryWithId($selected_parent_id);
+
+                        $this->set( 'parent_category', $this->OnlineResource->Category->read(array('id','name','description'), $selected_parent_id) );
+                }
+                $joins = array(
+                        array(
+                                'table'=>'categories_online_resources',
+                                'alias'=>'CategoriesOnlineResources',
+                                'type'=>'inner',
+                                'conditions'=>array(
+                                        'OnlineResource.id = CategoriesOnlineResources.online_resource_id',
+                                ),
+                        ),
+                        array(
+                                'table'=>'categories',
+                                'alias'=>'Category',
+                                'type'=>'inner',
+                                'conditions'=>array(
+                                        'CategoriesOnlineResources.category_id = Category.id',
+                                ),
+                        ),
+                );
+                if($selected_category_id){
+                        $conditions['Category.id'] = $selected_category_id;
+                }
+        }
+        
+        // Get list of sub categories
+        $categories = $this->OnlineResource->Category->find('list');
+        // pr($categories);
+
+        $this->set('hasResponse', $this->Session->read( 'response' ));
+        $this->set(compact('parents','categories','selected_parent_id','selected_category_id','sub_category_list','selected_parent_slug'));
+
+        
+    // KEYWORD SEARCH
+        if( $search = $this->request->query('search') ){
+                $searchBits = explode( ' ', $search );
+
+                foreach( $searchBits as &$searchBit ){
+                        $conditions['OR'][] = array( 'OnlineResource.name LIKE' => '%'.$searchBit.'%' );
+                        $conditions['OR'][] = array( 'OnlineResource.description LIKE' => '%'.$searchBit.'%' );
+                }
+        }
+        
+        
+        
+        
     }
     
     /**
@@ -56,36 +182,47 @@ class OnlineResourcesController extends AppController {
 	
 	if ($this->request->is('post')) {
             $this->OnlineResource->create();
-            debug($this->request->data);
+           
             if ($this->OnlineResource->save($this->request->data)) {
+                
+                //Check if image has been uploaded
+                if($this->request->data['OnlineResource']['image'])
+                {
+                    $img = $this->request->data['OnlineResource']['image']; //put the data into a var for easy use
+                    $imgName = $img['name'];
+                    
+                    $ext = substr(strtolower(strrchr($img['name'], '.')), 1); //get the extension
+                    $arr_ext = array('jpg', 'jpeg', 'gif', 'png'); //set allowed extensions
+                    
+                    //only process if the extension is valid
+                     if(in_array($ext, $arr_ext))
+                     {
+                        //do the actual uploading of the file. First arg is the tmp name, second arg is
+                        //where we are putting it
+
+                        move_uploaded_file($img['tmp_name'], WWW_ROOT . 'uploads/images/' . $img['name']);
+
+                           $this->Session->setFlash(__('The image has been saved'));
+                            //prepare the filename for database entry
+                           $this->request->data['OnlineResource']['image_path'] = $img['name'];
+                           print_r($this->request->data['OnlineResource']['image_path']);
+                           pr($this->request->data['OnlineResource']['image_path']);
+                        //}
+                        //else{
+                            
+                           // $this->Session->setFlash('There was a problem uploading file. Please try again.');
+                       // }
+                        
+                     }
+                }
+
 		$this->Session->setFlash(__('The online resource has been saved'));
                 $this->redirect(array('action' => 'index'));
             } else {
+                
 		$this->Session->setFlash(__('The online resource could not be saved. Please, try again.'));
             }
-            
-            if(!empty($this->data))
-            {
-                //Check if image has been uploaded
-                if(!empty($this->data['OnlineResource']['image']['name']))
-                {
-                    $img = $this->data['OnlineResource']['image']; //put the data into a var for easy use
-                    $ext = substr(strtolower(strrchr($img['name'], '.')), 1); //get the extension
-                    $arr_ext = array('jpg', 'jpeg', 'gif'); //set allowed extensions
-                    
-                    //only process if the extension is valid
-                        if(in_array($ext, $arr_ext))
-                        {
-                            //do the actual uploading of the file. First arg is the tmp name, second arg is
-                            //where we are putting it
-                            move_uploaded_file($file['tmp_name'], WWW_ROOT . 'CakePHP/app/webroot/img/' . $img['name']);
 
-                            //prepare the filename for database entry
-                            $this->data['OnlineResource']['image_path'] = $img['name'];
-                        }
-                }
-                
-            }
 	}
 	$categories = $this->OnlineResource->Category->find('list');
         $this->set(compact('categories'));

@@ -59,4 +59,3 @@
                 
 <?php endforeach; ?>
 	</table>
-	<p>
