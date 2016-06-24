@@ -8,7 +8,7 @@
 	<?php
 		echo $this->Html->meta('icon');
 
-		echo $this->Html->css('http://fast.fonts.net/cssapi/fdd1e71d-fe7f-47a7-a5a6-c61ebcc695d6.css');
+		echo $this->Html->css('//fast.fonts.net/cssapi/fdd1e71d-fe7f-47a7-a5a6-c61ebcc695d6.css');
 		echo $this->Html->css('cake.generic');
 		echo $this->Html->css('admin.css');
 		echo $this->Html->css('/css/ui-lightness/jquery-ui-1.10.4.custom.css');

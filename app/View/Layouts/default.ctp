@@ -12,7 +12,7 @@
 
 		echo $this->Html->meta('icon');
 
-		echo $this->Html->css('http://fast.fonts.net/cssapi/fdd1e71d-fe7f-47a7-a5a6-c61ebcc695d6.css?v='.$version_no);
+		echo $this->Html->css('//fast.fonts.net/cssapi/fdd1e71d-fe7f-47a7-a5a6-c61ebcc695d6.css?v='.$version_no);
 		echo $this->Html->css('/css/ui-lightness/jquery-ui-1.10.4.custom.css');
 		echo $this->Html->css('all.css?v='.$version_no);
 		echo $this->Html->css('/js/lib/fancybox/jquery.fancybox-1.3.4.css');
