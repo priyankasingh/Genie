@@ -12,7 +12,7 @@
 
 		echo $this->Html->meta('icon');
 
-		echo $this->Html->css('http://fast.fonts.net/cssapi/fdd1e71d-fe7f-47a7-a5a6-c61ebcc695d6.css?v='.$version_no);
+		echo $this->Html->css('//fast.fonts.net/cssapi/fdd1e71d-fe7f-47a7-a5a6-c61ebcc695d6.css?v='.$version_no);
 		echo $this->Html->css('/css/ui-lightness/jquery-ui-1.10.4.custom.css');
 		echo $this->Html->css('all.css?v='.$version_no);
 		echo $this->Html->css('/js/lib/fancybox/jquery.fancybox-1.3.4.css');
@@ -30,8 +30,6 @@
 		echo $this->Html->script('jquery-ui-1.10.4.custom.min.js');
                 
                 // ipad fix
-                //echo $this->Html->script('//code.jquery.com/jquery.min.js');
-                //echo $this->Html->script('//code.jquery.com/ui/1.8.17/jquery-ui.min.js');
                 echo $this->Html->script('lib/touch-puncher/jquery.ui.touch-punch.min.js');
                 
                 
@@ -230,7 +228,9 @@
 						</div>
 					</div>
 					<ul id="nav">
-						<?php foreach($parent_categories as $parent_category):?>
+						<?php 
+                                                $i = 0;
+                                                foreach($parent_categories as $parent_category):?>
 						<?php
 							$class = 'category-'.$parent_category['Category']['id'];
 							if(isset($selected_parent_id) && $selected_parent_id == $parent_category['Category']['id']){
@@ -239,6 +239,27 @@
 						?>
 						<li class="<?php echo $class;?>">
 							<?php echo $this->Html->link( $parent_category['Category']['name'], array('controller'=>'services', 'action'=>'index', $parent_category['Category']['slug']), array('class'=>'ajax') );
+                                                                if (++$i == 6) break;
+                                                        ?>
+						</li>
+						<?php endforeach;?>
+                                            
+                                            
+                                                <?php foreach($parent_categories as $parent_category):?>
+                                                <?php
+							$class = 'category-'.$parent_category['Category']['id'];
+							if(isset($selected_parent_id) && $selected_parent_id == $parent_category['Category']['id']){
+								$class .= ' active';
+							}
+						?>
+						<li class="<?php echo $class;?>">
+							<?php 
+                                                            
+                                                            if ($parent_category['Category']['name']=="Online support")
+                                                            {
+                                                        
+                                                                echo $this->Html->link( $parent_category['Category']['name'], array('controller'=>'onlineResources', 'action'=>'index', $parent_category['Category']['slug']) );
+                                                            }  
                                                         ?>
 						</li>
 						<?php endforeach;?>

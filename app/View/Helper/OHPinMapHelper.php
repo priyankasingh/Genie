@@ -48,9 +48,6 @@ class OHPinMapHelper extends AppHelper {
 	 * @return string protocol base (including ://)
 	 */
 	protected function _protocol() {
-		if (($https = $this->_currentOptions['https']) === null) {
-			$https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on';
-		}
-		return ($https ? 'https' : 'http') . '://';
+		return ('https://');		
 	}
 }
