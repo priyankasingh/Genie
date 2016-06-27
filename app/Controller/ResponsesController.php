@@ -7,20 +7,21 @@ App::uses('AppController', 'Controller');
  */
 class ResponsesController extends AppController {
 
-	function beforeFilter(){
-		$this->Auth->allow( 
-                        array(
+	public $uses = array('Response', 'Statement', 'NetworkMember');
+
+	public function beforeFilter(){
+		$this->Auth->allow(
+			array(
 				'add',
 				'my_network',
 				'questionnaire_setup',
 				'questionnaire_page'
-			) 
-                            
-                );
+			)
+		);
 		parent::beforeFilter();
 	}
-        
-        public function beforeRender() {
+
+	public function beforeRender() {
 		parent::beforeRender();
 		$params = $this->Session->read('questionnaire.params');
 		$this->set(compact('params'));
@@ -36,8 +37,8 @@ class ResponsesController extends AppController {
 		$this->Session->write('questionnaire.params.maxProgress', 0);
 		$this->redirect(array('action' => 'questionnaire_page', 1));
 	}
-        
-        public function questionnaire_page($pageNumber){
+
+	public function questionnaire_page($pageNumber){
 		$modelToValidate = 'Response';
 
 		// pr($this->request->data);
@@ -125,10 +126,9 @@ class ResponsesController extends AppController {
 									$existingNetworkMemberRemoved = false;
 								}
 							}
-                                                        
 							if ($existingNetworkMemberRemoved) {
-                                                            unset($existingResponse['NetworkMember'][$key]);
-                                                            $this->NetworkMember->delete($value);
+								unset($existingResponse['NetworkMember'][$key]);
+								$this->NetworkMember->delete($value);
 							}
 						}
 					}
@@ -163,7 +163,6 @@ class ResponsesController extends AppController {
 			 * Merge previous session data with submitted data
 			 */
 			$prevSessionData = $this->Session->read('questionnaire.data');
-                        //debugger::dump($prevSessionData);
 
 			/**
 			 * There's a catch with checkboxes
@@ -260,7 +259,7 @@ class ResponsesController extends AppController {
 					if (!empty($currentSessionData['NetworkMember'])) {
 						foreach ($currentSessionData['NetworkMember'] as $key => $value) {
 							for ($i=1; $i <= 13; $i++) {
-								$tmpStatement = isset($value['Statement' . $i]);
+								$tmpStatement = $value['Statement' . $i];
 								$currentSessionData['NetworkMember'][$key]['Statement' . $i] = json_encode($tmpStatement);
 							}
 						}
@@ -539,13 +538,9 @@ class ResponsesController extends AppController {
 		/**
 		 * Prepare for pages 3+ (Statement questions)
 		 */
-                
-                $this->loadModel("Statement");
 		$this->set('statementCount', count($this->Statement->find('all')));
 		$this->set('statement', $this->Statement->getStatement($pageNumber - 2));
 		$this->set(compact('pageNumber'));
-                
-                //$this->set('subcategory', $this->ResponseController->Category->getSubCategory(50));
 
 		if ($pageNumber == 16) {
 			// This needs to be based on the information from the session
@@ -634,9 +629,6 @@ class ResponsesController extends AppController {
 				}
 			}
 
-
-			//pr($this->request->data);
-
 			// Save everything
 			$fieldList = array(
 				'Response' => array( 'id','name','age','gender','postcode','lat','lng','user_id','network_type','network_type_id' ),
@@ -645,8 +637,6 @@ class ResponsesController extends AppController {
 				'ResponseStatement' => array('id','weighting','statement_id'),
 				'NetworkMember' => array('id','name','frequency','network_category_id','diagram_x','diagram_y','other', 'Interests'),
 			);
-                        //pr($this->request->data);
-                        //exit;
 			if( !$this->Auth->user('id') ){
 				// Prepare to save new user
 				$fieldList['User'] = array( 'email', 'password' );
@@ -676,7 +666,7 @@ class ResponsesController extends AppController {
 					'NOT' => array(
 						'NetworkMember.id' => $networkIds,
 					),
-					'NetworkMember.response_id'=>$this->Response->id
+					'NetworkMember.response_id' => $this->Response->id
 				));
 
 				// Created account?
@@ -693,7 +683,7 @@ class ResponsesController extends AppController {
 
 					$this->Session->setFlash(__('Your customised map is below. Your account information will arrive via email - please check your junk mail folder if you don\'t see it. '. $flashLink));
 				} else {
-					$this->Session->setFlash(__('Your responses have been saved. '.$flashLink));
+					$this->Session->setFlash(__('Your responses have been saved. ' . $flashLink));
 				}
 
 				// Response Saved - store in session
@@ -706,6 +696,8 @@ class ResponsesController extends AppController {
 			// Editing?
 			if( $existingResponse ){
 				$this->request->data = $existingResponse;
+				// pr($this->request->data);
+				// exit;
 			}
 		}
 
@@ -736,15 +728,12 @@ class ResponsesController extends AppController {
 
 	}
 
-	public function login() {
-		
-	}
 
 	public function my_network(){
 		// Has response?
 		$response_id = $this->Session->read( 'response' );
 		$response = $response_id ? $this->Response->find('first', array(
-			'conditions'=>array('Response.id'=>$response_id ),
+			'conditions'=>array('Response.id' => $response_id ),
 			'contain' => array(
 				'NetworkMember' => array(
 					'fields' => array('id','name','frequency','network_category_id','diagram_x','diagram_y','other'),
@@ -756,24 +745,27 @@ class ResponsesController extends AppController {
 			),
 		)) : false;
 
-		if( !$response ){
+		if(!$response){
 			$this->Session->setFlash(__('Please fill in the questionnaire to get your personalised network feedback.'));
-			//$this->redirect(array('controller'=>'responses', 'action' => 'add', '#'=>'questionnaire'));
-		
-                        $this->redirect(
+			$this->redirect(
 				array(
 					'controller' => 'responses',
 					'action' => 'questionnaire_setup',
 				)
 			);
-                }
+		}
 
-                $this->loadModel('NetworkType');
-                
-		$network_type = $this->Response->NetworkType->find('first', array(
-			'conditions' => array( 'NetworkType.id', $response['Response']['network_type_id'] ),
-                        'contain' => array()
-		));
+		$this->loadModel('NetworkType');
+		$network_type = $this->Response->NetworkType->find('first',
+			array(
+				'conditions' => array(
+					'NetworkType.id' => $response['Response']['network_type_id']
+				),
+				'contain' => array()
+			)
+		);
+		// pr($network_type);
+		// exit;
 
 		// Set view vars
 		$parentNetworkCategories = $this->Response->NetworkMember->NetworkCategory->find('list', array(
@@ -786,10 +778,10 @@ class ResponsesController extends AppController {
 		$this->set('title_for_layout', 'My Network');
 		$this->set('active_nav', 'my_network');
 	}
-        
-        protected function _getCoordinates($postcode){
+
+	protected function _getCoordinates($postcode){
 		// Get lat / lon
-		if ($xml = simplexml_load_file('http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&region=uk&address=' . $postcode)){
+		if ($xml = simplexml_load_file('https://maps.googleapis.com/maps/api/geocode/xml?sensor=false&region=uk&address=' . $postcode)){
 			if ($xml->status == 'OK'){
 				$lat = (array) $xml->result->geometry->location->lat;
 				$lng = (array) $xml->result->geometry->location->lng;
@@ -804,8 +796,8 @@ class ResponsesController extends AppController {
 			}
 		}
 	}
-        
-        protected function _finishQuestionnaire($data){
+
+	protected function _finishQuestionnaire($data){
 
 		$this->loadModel('ConditionsResponse');
 		$this->ConditionsResponse->deleteAll(array('response_id' => $data['Response']['id']), false);
@@ -850,9 +842,7 @@ class ResponsesController extends AppController {
 	}
 
 	protected function _existingResponse( ){
-		$response_id = $this->Session->read( 'response' );
-
-		// pr($response_id);
+		$response_id = $this->Session->read('response');
 
 		$response = $response_id ? $this->Response->find('first', array(
 			'conditions'=>array('Response.id'=>$response_id ),
@@ -907,14 +897,14 @@ class ResponsesController extends AppController {
 						'response_id',
 						'data'
 					)
-                                )
+				)
 			),
+
 		)) : false;
 
 		// Process ResponseStatements so that they are indexed by Statement ID (VITAL FOR VIEW FUNCTIONALITY)
 		if( $response && !empty( $response['ResponseStatement'] ) ){
 			$response['ResponseStatement'] = Set::combine( $response['ResponseStatement'], '{n}.statement_id', '{n}');
-
 			// Switch category key to IDs only (FormHelper fails otherwise)
 			foreach( $response['ResponseStatement'] as &$responseStatement ){
 				if( !empty( $responseStatement['Category'] ) ){
@@ -922,8 +912,8 @@ class ResponsesController extends AppController {
 				}
 			}
 		}
-                
-                /**
+
+		/**
 		 * json_decode network member statements
 		 */
 		if (!empty($response['NetworkMember'])) {
@@ -934,7 +924,6 @@ class ResponsesController extends AppController {
 				}
 			}
 		}
-
 
 		// Done
 		return $response;

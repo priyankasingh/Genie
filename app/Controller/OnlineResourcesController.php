@@ -32,7 +32,7 @@ class OnlineResourcesController extends AppController {
         //pr($response);
    
         //Get statement id for the online resource user picked
-        $response_statement_id = $response['ResponseStatement']['0']['id'];
+        $response_statement_id = $response['ResponseStatement']['11']['id'];
         //pr($response_statement_id);
       
         
@@ -43,138 +43,42 @@ class OnlineResourcesController extends AppController {
         $query = $this->Category->ResponseStatement->find('all',
                 ['conditions' => ['ResponseStatement.id' => $response_statement_id]]);
         
-        
-        //$row = $query->first();
+
         //pr($query['0']['Category']);
         //pr($query);
         $cats = array();
 	$catIDs = array();
         
-        foreach( $query['Category'] as $category)
+        foreach( $query['0']['Category'] as $category)
         {
             if( !in_array( $category['id'], $catIDs ) ){ // No duplicates
 		$cats[]['Category'] = $category;
 		$catIDs[] = $category['id'];
             }
         }
-        
-        pr($cats);
-        pr($catsIDs);
-        
-        $query2 = $this->OnlineResource->Category->find('all',
-                ['conditions' => ['Category.id' => '49']]);
+        //pr($cats);
+        //pr($catIDs);
         
         
-        //pr($query2);
-        
-        // Search for all the online resources from the categories user has chosen
-        $this->set('onlineResource', $this->OnlineResource->find('all'));
-        //$this->set('onlineResources', $this->OnlineResource->Category->find('all',
-          //      ['conditions' => ['Category.id' => '49']]));
-        
-        
-        $this->loadModel('Service');
-        //if($selected_service_slug){
-            
-		// VIEW INDIVIDUAL SERVICE
-        //        $selected_service_id = $this->Service->getIdFromSlug($selected_service_slug);
-        //        $this->setAction('view', $selected_parent_slug, $selected_category_slug, $selected_service_slug);
-       // }
-
-        $conditions = array();
-        $joins = array();
-
-        $selected_parent_id = null;
-        $selected_category_id = null;
-        
-        
-        if( $selected_parent_slug == 'favourites' ){
-        // FAVOURITES
-                // Logged in only
-                if( !$this->Auth->user('id') ){
-                        $this->Session->setFlash(__('Please log in to view favourites.'));
-                        $this->redirect(array('controller'=>'users', 'action' => 'login'));
-                }
-
-
-                $this->loadModel('Favourite');
-                $faves = $this->Favourite->find('all', array(
-                        'conditions'=>array(
-                                'Favourite.user_id' => $this->Auth->user('id'),
-                                'Favourite.deleted' => null,
-                        ),
-                ));
-                $faveIDs = array();
-                foreach( $faves as $fave ) $faveIDs[] = $fave['Favourite']['service_id'];
-
-                $conditions['Service.id'] = $faveIDs;
-
-                // Set query and view vars
-                $this->set('favourites', true);
-        } else {
-        // NORMAL CATEGORIES
-                
-                if($selected_parent_slug){
-                        $selected_parent_id = $this->OnlineResource->Category->getIdFromSlug($selected_parent_slug);
-
-                        pr($selected_parent_id);
-                }
-                if($selected_category_slug){
-                        $selected_category_id = $this->OnlineResource->Category->getIdFromSlug($selected_category_slug);
-                        pr($selected_category_id);
-
-                }
+        foreach($catIDs as $catId)
+        {
+            // Search for all the online resources from the categories user has chosen
+            //$this->set('onlineResource', $this->OnlineResource->find('all'));
+            $this->set('onlineResource', $this->OnlineResource->Category->find('all',
+                ['conditions' => ['Category.id' => $catId]]));
         }
         
-        //pr($sub_category_list);
-        
-        if($selected_parent_id || $selected_category_id){
-                if($selected_parent_id){
-                        $conditions['Category.parent_id'] = $selected_parent_id;
-                        $sub_category_list = $this->OnlineResource->Category->getChildrenOfCategoryWithId($selected_parent_id);
-
-                        $this->set( 'parent_category', $this->OnlineResource->Category->read(array('id','name','description'), $selected_parent_id) );
-                }
-                $joins = array(
-                        array(
-                                'table'=>'categories_online_resources',
-                                'alias'=>'CategoriesOnlineResources',
-                                'type'=>'inner',
-                                'conditions'=>array(
-                                        'OnlineResource.id = CategoriesOnlineResources.online_resource_id',
-                                ),
-                        ),
-                        array(
-                                'table'=>'categories',
-                                'alias'=>'Category',
-                                'type'=>'inner',
-                                'conditions'=>array(
-                                        'CategoriesOnlineResources.category_id = Category.id',
-                                ),
-                        ),
-                );
-                if($selected_category_id){
-                        $conditions['Category.id'] = $selected_category_id;
-                }
+        foreach($catIDs as $catId)
+        {
+            // Search for all the online resources from the categories user has chosen
+            //$this->set('onlineResource', $this->OnlineResource->find('all'));
+            $this->set('onlineResource', $this->OnlineResource->Category->find('all',
+                ['conditions' => ['Category.id' => $catId]]));
         }
         
-        // Get list of sub categories
-        $categories = $this->OnlineResource->Category->find('list');
-        // pr($categories);
-
-        $this->set('hasResponse', $this->Session->read( 'response' ));
-        $this->set(compact('parents','categories','selected_parent_id','selected_category_id','sub_category_list','selected_parent_slug'));
-
         
-    // KEYWORD SEARCH
-        if( $search = $this->request->query('search') ){
-                $searchBits = explode( ' ', $search );
-
-                foreach( $searchBits as &$searchBit ){
-                        $conditions['OR'][] = array( 'OnlineResource.name LIKE' => '%'.$searchBit.'%' );
-                        $conditions['OR'][] = array( 'OnlineResource.description LIKE' => '%'.$searchBit.'%' );
-                }
-        }
+        
+       
         
         
         

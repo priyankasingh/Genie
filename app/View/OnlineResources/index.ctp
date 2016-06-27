@@ -32,13 +32,7 @@
                                 'paginator' => isset($this->Paginator)?$this->Paginator:null,
                                 'service' => isset($service)?$service:null,
         ));?>
-    <?php echo $this->element('results_box', array(
-                            'parents' => isset($parents)?$parents:null,
-                            'categories' => isset($categories)?$categories:null,
-                            'paginator' => isset($this->Paginator)?$this->Paginator:null,
-                            'category' => isset($category)?$category:null,
-                            'service' => isset($service)?$service:null,
-    ));?>	
+    	
     <?php echo $this->element('results_pager', array(
                     'paginator' => $this->Paginator,
     ));?>
@@ -55,14 +49,18 @@
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 	</tr>
-	<?php foreach ($onlineResource as $online_resource): ?>
-	<tr>
-		<td><?php echo h($online_resource['OnlineResource']['id']); ?>&nbsp;</td>
-		<td><?php echo h($online_resource['OnlineResource']['name']); ?>&nbsp;</td>
-		<td><?php echo h($online_resource['OnlineResource']['url']); ?>&nbsp;</td>
-		<td><?php echo h($online_resource['OnlineResource']['created']); ?>&nbsp;</td>
-		<td><?php echo h($online_resource['OnlineResource']['modified']); ?>&nbsp;</td>
+	<?php foreach ($onlineResource as $on): ?>
+	
+            <?php foreach ($on['OnlineResource'] as $online_resource): ?>
+        <tr>
+            
+		<td><?php echo h($online_resource['id']); ?>&nbsp;</td>
+		<td><?php echo h($online_resource['name']); ?>&nbsp;</td>
+		<td><?php echo h($online_resource['url']); ?>&nbsp;</td>
+		<td><?php echo h($online_resource['created']); ?>&nbsp;</td>
+		<td><?php echo h($online_resource['modified']); ?>&nbsp;</td>
 	</tr>
+            <?php endforeach; ?>
         <?php endforeach; ?>
 	</table>
 

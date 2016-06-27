@@ -42,7 +42,7 @@ class Response extends AppModel {
 			),
 		),
 		'postcode' => array(
-			'notblank' => array(
+			'notempty' => array(
 				'rule' => array('notblank'),
 				'message' => 'Please enter your postcode',
 				'allowEmpty' => false,
@@ -53,8 +53,7 @@ class Response extends AppModel {
 		),
 	);
 
-        
-        public function beforeSave($options = array()) {
+	public function beforeSave($options = array()) {
 		if (	 isset($this->data['TopInterest']['data'])
 				&& !empty($this->data['TopInterest']['data'])
 			) {
@@ -67,7 +66,6 @@ class Response extends AppModel {
 
 
 	public $hasOne = 'TopInterest';
-
 
 /**
  * belongsTo associations
@@ -90,7 +88,7 @@ class Response extends AppModel {
 			'order' => ''
 		)
 	);
-	
+
 /**
  * hasMany associations
  *
@@ -122,7 +120,7 @@ class Response extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
+		)
 	);
 
 /**
@@ -147,7 +145,7 @@ class Response extends AppModel {
 			'insertQuery' => ''
 		)
 	);
-	
+
 	public function getNetworkTypes(){
 		return array(
 			'very_diverse',
@@ -162,21 +160,21 @@ class Response extends AppModel {
 			'highly_isolated',
 		);
 	}
-	
+
 	public function getNetworkType( $data = null ){
 		if( !$data ) $data = $this->data;
-		
+
 		$scores = $this->getScoreBreakDown( $data );
-		
+
 		// Scoring
 		$family = $scores[1];
 		$friends = $scores[9];
 		$groups = $scores[17];
 		$overall = $family + $friends + $groups;
-		
+
 		if( $family >= 20 && $friends >= 15 && $groups >= 2 ){
 			return 'very_diverse';
-		} elseif( $family >=20 && $friends > 0 && $friends < 15 && $groups >= 2 
+		} elseif( $family >=20 && $friends > 0 && $friends < 15 && $groups >= 2
 				|| $family > 0 && $family < 20 && $friends >= 15 && $groups >= 2
 				|| $family >= 20 && $friends >= 15 && $groups = 1 ){
 			return 'diverse';
@@ -186,9 +184,9 @@ class Response extends AppModel {
 			return 'friend_centered';
 		} elseif( $family >= 20 && $friends < 15 && $groups < 2 ){
 			return 'family_centered';
-		} elseif( $family >= 7 && $family < 20 && $friends >= 5 && $friends < 15 ){		
+		} elseif( $family >= 7 && $family < 20 && $friends >= 5 && $friends < 15 ){
 			return 'family_friend_supported';
-		} elseif( $family < 7 && $friends >= 5 && $friends < 15 ){		
+		} elseif( $family < 7 && $friends >= 5 && $friends < 15 ){
 			return 'friend_supported';
 		} elseif( $family >= 7 && $family < 20 && $friends < 5 ){
 			return 'family_supported';
@@ -198,15 +196,15 @@ class Response extends AppModel {
 			return 'highly_isolated';
 		}
 	}
-	
+
 	public function getScoreBreakDown( $data = null, $countsOnly = false ){
 		if( !$data ) $data = $this->data;
-		
+
 		$scores = array();
 		$parentNetworkCategories = $this->NetworkMember->NetworkCategory->find('all', array(
 			'conditions'=>array('NetworkCategory.parent_id'=>null),
 		));
-		
+
 		// Foreach Parent Category
 		foreach( $parentNetworkCategories as $parentNetworkCategory ){
 			$score = 0;
@@ -217,14 +215,14 @@ class Response extends AppModel {
 					));
 					$member['NetworkCategory'] = $networkCategory['NetworkCategory'];
 				}
-				
+
 				if( $parentNetworkCategory['NetworkCategory']['id'] == $member['NetworkCategory']['parent_id'] )
 					$score += ( $countsOnly ? 1 : $this->NetworkMember->getFrequencyScore( $member['frequency'] ) );
 			}
-				
+
 			$scores[ $parentNetworkCategory['NetworkCategory']['id'] ] = $score;
 		}
-		
+
 		return $scores;
 	}
 }
