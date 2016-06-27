@@ -55,7 +55,7 @@
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 	</tr>
-	<?php foreach ($onlineResources as $online_resource): ?>
+	<?php foreach ($onlineResource as $online_resource): ?>
 	<tr>
 		<td><?php echo h($online_resource['OnlineResource']['id']); ?>&nbsp;</td>
 		<td><?php echo h($online_resource['OnlineResource']['name']); ?>&nbsp;</td>

@@ -15,28 +15,63 @@ class OnlineResourcesController extends AppController {
     //public $helpers = array('Html', 'Form');
 
     public function index($selected_parent_slug = null, $selected_category_slug = null, $selected_service_slug = null) {
-        
-        
-        $this->set('onlineResources', $this->OnlineResource->find('all'));
-        pr($selected_parent_slug);
-        pr($selected_category_slug);
-        pr($selected_service_slug);
-        
+
         // Get network members
 	// Has response?
         
         $this->loadModel('Response');
         $response_id = $this->Session->read( 'response' );
+        //pr($response_id);
         $response = $response_id ? $this->Response->find('first',
                 array(
                         'conditions' => array('Response.id' => $response_id ),
                         'contain' => array(
-                                'NetworkMember'
+                                'NetworkMember', 'ResponseStatement'
                         ),
                 )) : false;
         //pr($response);
-       // pr($network_members);
-	$this->set('network_members', $response);
+   
+        //Get statement id for the online resource user picked
+        $response_statement_id = $response['ResponseStatement']['0']['id'];
+        //pr($response_statement_id);
+      
+        
+        
+        // Get all the category user picked for the statement
+        $this->loadModel('Category');
+        $query = array();
+        $query = $this->Category->ResponseStatement->find('all',
+                ['conditions' => ['ResponseStatement.id' => $response_statement_id]]);
+        
+        
+        //$row = $query->first();
+        //pr($query['0']['Category']);
+        //pr($query);
+        $cats = array();
+	$catIDs = array();
+        
+        foreach( $query['Category'] as $category)
+        {
+            if( !in_array( $category['id'], $catIDs ) ){ // No duplicates
+		$cats[]['Category'] = $category;
+		$catIDs[] = $category['id'];
+            }
+        }
+        
+        pr($cats);
+        pr($catsIDs);
+        
+        $query2 = $this->OnlineResource->Category->find('all',
+                ['conditions' => ['Category.id' => '49']]);
+        
+        
+        //pr($query2);
+        
+        // Search for all the online resources from the categories user has chosen
+        $this->set('onlineResource', $this->OnlineResource->find('all'));
+        //$this->set('onlineResources', $this->OnlineResource->Category->find('all',
+          //      ['conditions' => ['Category.id' => '49']]));
+        
         
         $this->loadModel('Service');
         //if($selected_service_slug){

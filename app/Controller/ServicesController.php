@@ -90,8 +90,10 @@ class ServicesController extends AppController {
 				),
 			)) : false;
                 
-		// pr($network_members);
+		
 		$this->set('network_members', $response);
+                //pr($network_members);
+                
 
 		if($selected_service_slug){
 			// VIEW INDIVIDUAL SERVICE
@@ -111,7 +113,7 @@ class ServicesController extends AppController {
 		if( $selected_parent_slug == 'my-map' ){
 			// Get list of categories
 			$sub_category_list = $this->_response_categories();
-			// pr($sub_category_list);
+			 //pr($sub_category_list);
 
 			if( !$sub_category_list ){
 				if($this->Session->read('response')){
