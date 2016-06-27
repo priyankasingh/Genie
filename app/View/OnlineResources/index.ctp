@@ -3,12 +3,12 @@
 	
             <?php
             if( !empty( $parent_category )) echo $parent_category['Category']['description'];
-            echo $parent_category['Category']['id'];
+           // echo $parent_category['Category']['id'];
             ?>
 	</div>
     
-       
-        <?php
+       <!--
+        <? php
         echo $this->element('category_filter',
                 array(
                         'sub_category_list' => isset($sub_category_list)?$sub_category_list:null,
@@ -17,7 +17,7 @@
                         'selected_parent_slug' => isset($selected_parent_slug)?$selected_parent_slug:null,
                 )
         );
-        ?>
+        ?>  -->
 
 <div class="aside">
     <a class="print" href="#"><?php echo __('Print Your results'); ?></a>
@@ -42,7 +42,7 @@
     <?php echo $this->element('results_pager', array(
                     'paginator' => $this->Paginator,
     ));?>
-    <div id="parent-id"><?php echo $selected_parent_id;?></div>
+    <div id="parent-id"><? // php echo $selected_parent_id;?></div>
 </div>
 
 
