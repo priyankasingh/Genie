@@ -23,44 +23,43 @@
     <a class="print" href="#"><?php echo __('Print Your results'); ?></a>
     <div class="link-holder">
         <a class="results" href="#"><?php echo __('My Results'); ?></a>
-        <a class="favourites" href="#"><?php echo __('My Favourites'); ?></a>
+      <!--  <a class="favourites" href="#"><?php echo __('My Favourites'); ?></a> -->
     </div>
 
-        <?php echo $this->element('results_box', array(
-                                'parents' => isset($parents)?$parents:null,
-                                'categories' => isset($categories)?$categories:null,
-                                'paginator' => isset($this->Paginator)?$this->Paginator:null,
-                                'service' => isset($service)?$service:null,
-        ));?>
-    	
-    <?php echo $this->element('results_pager', array(
-                    'paginator' => $this->Paginator,
-    ));?>
-    <div id="parent-id"><? // php echo $selected_parent_id;?></div>
+    <div id="results_box">
+        <ul id="results-list">
+            <li class="category-43">
+                <h2 class="results-list">Online Resources</h2>
+                
+                <ul class="aside-list">
+                
+                    <?php foreach ($onlineResource as $on): ?>
+
+                        <?php foreach ($on['OnlineResource'] as $online_resource): ?>
+                            <li id="service-<?php echo h($online_resource['id']); ?>" class="results-list">
+
+                            <div class="text-section">
+
+                                <h3><a href="<?php echo $online_resource['url'];?>" target="_blank"><?php echo $online_resource['name'] ;?></a> -
+                                    <span class="mark"><?php echo $cat;?></span></h3>
+                                <?php if( !empty($online_resource['url']) ):?>
+                                    <p><strong><?php echo __('URL:'); ?> </strong><a href="<?php echo $online_resource['url'];?>" target="_blank"><?php echo $online_resource['url'];?></a></p>
+                                <?php endif;?>
+                                <?php if( !empty($online_resource['description']) ):?>
+                                    <p><strong><?php echo __('Description:'); ?> </strong><?php echo ($online_resource['description']);?></p>
+                                <?php endif;?>
+
+                                <?php if( !empty($online_resource['age_lower']) ):?>
+                                    <p><strong><?php echo __('Age:'); ?> </strong><?php echo ($online_resource['age_lower']);?> - <?php echo ($online_resource['age_upper']);?></p>
+                                <?php endif;?>
+                            </div>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                   
+                </ul>
+            </li>
+        </ul>
+    </div>
 </div>
-
-
-	<h2><?php echo __('Online Resources'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
-	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('name'); ?></th>
-			<th><?php echo $this->Paginator->sort('url'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-	</tr>
-	<?php foreach ($onlineResource as $on): ?>
-	
-            <?php foreach ($on['OnlineResource'] as $online_resource): ?>
-        <tr>
-            
-		<td><?php echo h($online_resource['id']); ?>&nbsp;</td>
-		<td><?php echo h($online_resource['name']); ?>&nbsp;</td>
-		<td><?php echo h($online_resource['url']); ?>&nbsp;</td>
-		<td><?php echo h($online_resource['created']); ?>&nbsp;</td>
-		<td><?php echo h($online_resource['modified']); ?>&nbsp;</td>
-	</tr>
-            <?php endforeach; ?>
-        <?php endforeach; ?>
-	</table>
 

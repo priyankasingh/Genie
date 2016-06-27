@@ -59,14 +59,21 @@ class OnlineResourcesController extends AppController {
         //pr($cats);
         //pr($catIDs);
         
+        $query2 = array();
         
         foreach($catIDs as $catId)
         {
             // Search for all the online resources from the categories user has chosen
             //$this->set('onlineResource', $this->OnlineResource->find('all'));
-            $this->set('onlineResource', $this->OnlineResource->Category->find('all',
-                ['conditions' => ['Category.id' => $catId]]));
+            $query2 = $this->OnlineResource->Category->find('all',
+                ['conditions' => ['Category.id' => $catId]]);
+            
+            //pr($query2[0]['Category']['name']);
+            $this->set('cat', $query2[0]['Category']['name']);
         }
+        
+        //pr($query2);
+        
         
         foreach($catIDs as $catId)
         {
