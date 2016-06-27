@@ -45,7 +45,7 @@ class OnlineResourcesController extends AppController {
         
 
         //pr($query['0']['Category']);
-        //pr($query);
+       
         $cats = array();
 	$catIDs = array();
         
@@ -63,8 +63,8 @@ class OnlineResourcesController extends AppController {
         
         foreach($catIDs as $catId)
         {
-            // Search for all the online resources from the categories user has chosen
-            //$this->set('onlineResource', $this->OnlineResource->find('all'));
+            // Set the category variable
+            
             $query2 = $this->OnlineResource->Category->find('all',
                 ['conditions' => ['Category.id' => $catId]]);
             
@@ -72,9 +72,7 @@ class OnlineResourcesController extends AppController {
             $this->set('cat', $query2[0]['Category']['name']);
         }
         
-        //pr($query2);
-        
-        
+        // Find all the online resources for each category and set it to onlineResource variable for view to access it
         foreach($catIDs as $catId)
         {
             // Search for all the online resources from the categories user has chosen
@@ -82,12 +80,23 @@ class OnlineResourcesController extends AppController {
             $this->set('onlineResource', $this->OnlineResource->Category->find('all',
                 ['conditions' => ['Category.id' => $catId]]));
         }
-        
-        
-        
-       
-        
-        
+          
+        //Add category desription]
+        $selected_parent_id = null;
+
+        if($selected_parent_slug){
+            
+            $this->loadModel('Service');
+            $selected_parent_id = $this->Service->Category->getIdFromSlug($selected_parent_slug);
+			
+          
+            if($selected_parent_id){
+                $conditions['Category.parent_id'] = $selected_parent_id;
+                $sub_category_list = $this->Service->Category->getChildrenOfCategoryWithId($selected_parent_id);
+
+                $this->set( 'parent_category', $this->Service->Category->read(array('id','name','description'), $selected_parent_id) );
+            }
+        }
         
         
     }

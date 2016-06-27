@@ -229,8 +229,8 @@
 					</div>
 					<ul id="nav">
 						<?php 
-                                                $i = 0;
-                                                foreach($parent_categories as $parent_category):?>
+                                                    $i = 0;
+                                                    foreach($parent_categories as $parent_category):?>
 						<?php
 							$class = 'category-'.$parent_category['Category']['id'];
 							if(isset($selected_parent_id) && $selected_parent_id == $parent_category['Category']['id']){

@@ -139,7 +139,7 @@
 			<h2><?php echo __("Don't have an account? Fill in the GENIE questionnaire..."); ?></h2>
 			<strong><?php echo __('Put in your email address when taking the questionnaire to automatically set up an account.'); ?></strong>
 			<div class="btn-holder">
-				<a href="/#questionnaire" class="btn question-button" ><?php echo __('Fill in the EUGENIE questionnaire...'); ?></a>
+				<a href="/#questionnaire" class="btn question-button" ><?php echo __('Fill in the GENIE questionnaire...'); ?></a>
 			</div>
 		</div>
 	</div>
