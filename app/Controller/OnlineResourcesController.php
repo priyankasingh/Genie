@@ -12,7 +12,6 @@ class OnlineResourcesController extends AppController {
 	parent::beforeFilter();
     }
     
-    //public $helpers = array('Html', 'Form');
 
     public function index($selected_parent_slug = null, $selected_category_slug = null, $selected_service_slug = null) {
 
@@ -229,105 +228,118 @@ class OnlineResourcesController extends AppController {
     * @return void
     */
     public function admin_edit($id = null) {
-            if (!$this->OnlineResource->exists($id)) {
-                    throw new NotFoundException(__('Online resource does not exist'));
-            }
-            if ($this->request->is('post') || $this->request->is('put')) {
-    
-                if(!empty($this->data))
+        if (!$this->OnlineResource->exists($id)) {
+                throw new NotFoundException(__('Online resource does not exist'));
+        }
+        if ($this->request->is('post') || $this->request->is('put')) {
+
+            if(!empty($this->data))
+            {
+                if(!empty($this->data['OnlineResource']['image']['name'])) // if there is an image save it all
                 {
-                    if(!empty($this->data['OnlineResource']['image']['name'])) // if there is an image save it all
+                    //delete old image file if exist
+                    $data1 = $this->OnlineResource->findById($id);
+
+                    if(!empty($data1['OnlineResource']['image_path']))
                     {
-                        //delete old image file if exist
-                        $data1 = $this->OnlineResource->findById($id);
-                        
-                        if(!empty($data1['OnlineResource']['image_path']))
-                        {
-                            if(unlink(WWW_ROOT . 'uploads/images/' . $data1['OnlineResource']['image_path']))  
-                            {                               
-                                echo 'image deleted.....';  
-                            }
-                        }
-                        
-                        
-                        $file = $this->data['OnlineResource']['image'];
-                        $ext = substr(strtolower(strrchr($file['name'], '.')), 1); // get extension
-                        $arr_ext = array('jpg', 'jpeg', 'png'); //set allowed extensions
-
-                        $imageName =$file['name'];
-
-                        if(in_array($ext, $arr_ext))
-                        {
-                            //create full filename with timestamp
-                            $imageName = date('His') . $imageName;
-
-                            if(move_uploaded_file($file['tmp_name'], WWW_ROOT . 'uploads/images/' . DS . $imageName)) // move the image to the right folder
-                            {
-                                //prepare the filename for database entry
-                                $this->request->data['OnlineResource']['image_path'] = $imageName;
-
-                                if($this->OnlineResource->save($this->request->data)) // save the data
-                                {
-                                    $this->Session->setFlash(__('The online resource with image has been saved'), 'default',array('class'=>'success'));
-                                    $this->redirect(array('action'=>'index'));
-                                }
-                                else
-                                {
-                                    $this->Session->setFlash(__('The online resource and image could not be saved. Please, try again.'));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            $this->Session->setFlash(__('You can only upload an image, no other file type.'));
+                        if(unlink(WWW_ROOT . 'uploads/images/' . $data1['OnlineResource']['image_path']))  
+                        {                               
+                            echo 'image deleted.....';  
                         }
                     }
-                    elseif(empty($this->data['OnlineResource']['image']['name'])) // if there is no image
+
+                    $file = $this->data['OnlineResource']['image'];
+                    $ext = substr(strtolower(strrchr($file['name'], '.')), 1); // get extension
+                    $arr_ext = array('jpg', 'jpeg', 'png'); //set allowed extensions
+
+                    $imageName =$file['name'];
+
+                    if(in_array($ext, $arr_ext))
                     {
-                        if($this->OnlineResource->save($this->request->data)) 
+                        //create full filename with timestamp
+                        $imageName = date('His') . $imageName;
+
+                        if(move_uploaded_file($file['tmp_name'], WWW_ROOT . 'uploads/images/' . DS . $imageName)) // move the image to the right folder
                         {
-                            $this->Session->setFlash(__('The online resource has been saved.'), 'default',array('class'=>'success'));
-                            $this->redirect(array('action'=>'index'));
+                            //prepare the filename for database entry
+                            $this->request->data['OnlineResource']['image_path'] = $imageName;
+
+                            if($this->OnlineResource->save($this->request->data)) // save the data
+                            {
+                                $this->Session->setFlash(__('The online resource with image has been saved'), 'default',array('class'=>'success'));
+                                $this->redirect(array('action'=>'index'));
+                            }
+                            else
+                            {
+                                $this->Session->setFlash(__('The online resource and image could not be saved. Please, try again.'));
+                            }
                         }
                     }
                     else
                     {
-                        $this->Session->setFlash(__('The online resource could not be saved. Please, try again.'));
+                        $this->Session->setFlash(__('You can only upload an image, no other file type.'));
                     }
-                
                 }
-                
-            } else {
-                $options = array('conditions' => array('OnlineResource.' . $this->OnlineResource->primaryKey => $id));
-                $this->request->data = $this->OnlineResource->find('first', $options);
+                elseif(empty($this->data['OnlineResource']['image']['name'])) // if there is no image
+                {
+                    if($this->OnlineResource->save($this->request->data)) 
+                    {
+                        $this->Session->setFlash(__('The online resource has been saved.'), 'default',array('class'=>'success'));
+                        $this->redirect(array('action'=>'index'));
+                    }
+                }
+                else
+                {
+                    $this->Session->setFlash(__('The online resource could not be saved. Please, try again.'));
+                }
+
             }
 
-            $categories = $this->OnlineResource->Category->find('list');
-            $this->set(compact('categories'));
+        } else {
+            $options = array('conditions' => array('OnlineResource.' . $this->OnlineResource->primaryKey => $id));
+            $this->request->data = $this->OnlineResource->find('first', $options);
+        }
+
+        $categories = $this->OnlineResource->Category->find('list');
+        $this->set(compact('categories'));
 
     }
         
         
- /**
- * admin_delete method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function admin_delete($id = null) {
-		$this->OnlineResource->id = $id;
-		if (!$this->OnlineResource->exists()) {
-			throw new NotFoundException(__('Invalid online resource'));
-		}
-		$this->request->onlyAllow('post', 'delete');
-		if ($this->OnlineResource->delete()) {
-			$this->Session->setFlash(__('Online resource deleted'));
-			$this->redirect(array('action' => 'index'));
-		}
-		$this->Session->setFlash(__('Online resource was not deleted'));
-		$this->redirect(array('action' => 'index'));
-	}
+    /**
+    * admin_delete method
+    *
+    * @throws NotFoundException
+    * @param string $id
+    * @return void
+    */
+    public function admin_delete($id = null) {
+        $this->OnlineResource->id = $id;
+        if (!$this->OnlineResource->exists()) {
+                throw new NotFoundException(__('Invalid online resource'));
+        }
+        $this->request->onlyAllow('post', 'delete');
+
+        $data1 = $this->OnlineResource->findById($id);
+
+        // delete the image file if exist
+        if(!empty($data1['OnlineResource']['image_path']))
+        {
+           $file = new File(WWW_ROOT . 'uploads/images/' . $data1['OnlineResource']['image_path']);
+
+           if($file->delete()) {
+                echo 'image deleted.....';
+           }
+        }
+        if ($this->OnlineResource->delete()) {
+
+            $this->Session->setFlash(__('Online resource deleted'));
+            $this->redirect(array('action' => 'index'));
+        }
+
+        $this->Session->setFlash(__('Online resource was not deleted'));
+        $this->redirect(array('action' => 'index'));
+    }
     
     
 }
