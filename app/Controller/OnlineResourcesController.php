@@ -233,11 +233,23 @@ class OnlineResourcesController extends AppController {
                     throw new NotFoundException(__('Online resource does not exist'));
             }
             if ($this->request->is('post') || $this->request->is('put')) {
-                
+    
                 if(!empty($this->data))
                 {
                     if(!empty($this->data['OnlineResource']['image']['name'])) // if there is an image save it all
                     {
+                        //delete old image file if exist
+                        $data1 = $this->OnlineResource->findById($id);
+                        
+                        if(!empty($data1['OnlineResource']['image_path']))
+                        {
+                            if(unlink(WWW_ROOT . 'uploads/images/' . $data1['OnlineResource']['image_path']))  
+                            {                               
+                                echo 'image deleted.....';  
+                            }
+                        }
+                        
+                        
                         $file = $this->data['OnlineResource']['image'];
                         $ext = substr(strtolower(strrchr($file['name'], '.')), 1); // get extension
                         $arr_ext = array('jpg', 'jpeg', 'png'); //set allowed extensions
