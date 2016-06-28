@@ -29,13 +29,8 @@ class OnlineResourcesController extends AppController {
                                 'NetworkMember', 'ResponseStatement'
                         ),
                 )) : false;
-        //pr($response);
-   
         //Get statement id for the online resource user picked
         $response_statement_id = $response['ResponseStatement']['11']['id'];
-        //pr($response_statement_id);
-      
-        
         
         // Get all the category user picked for the statement
         $this->loadModel('Category');
@@ -43,9 +38,6 @@ class OnlineResourcesController extends AppController {
         $query = $this->Category->ResponseStatement->find('all',
                 ['conditions' => ['ResponseStatement.id' => $response_statement_id]]);
         
-
-        //pr($query['0']['Category']);
-       
         $cats = array();
 	$catIDs = array();
         
@@ -56,8 +48,6 @@ class OnlineResourcesController extends AppController {
 		$catIDs[] = $category['id'];
             }
         }
-        //pr($cats);
-        //pr($catIDs);
         
         $query2 = array();
         
@@ -68,7 +58,6 @@ class OnlineResourcesController extends AppController {
             $query2 = $this->OnlineResource->Category->find('all',
                 ['conditions' => ['Category.id' => $catId]]);
             
-            //pr($query2[0]['Category']['name']);
             $this->set('cat', $query2[0]['Category']['name']);
         }
         
@@ -81,15 +70,13 @@ class OnlineResourcesController extends AppController {
                 ['conditions' => ['Category.id' => $catId]]));
         }
           
-        //Add category desription]
+        //Add category desription
         $selected_parent_id = null;
 
         if($selected_parent_slug){
             
-            //$this->loadModel('Service');
             $selected_parent_id = $this->OnlineResource->Category->getIdFromSlug($selected_parent_slug);
-			
-          
+		
             if($selected_parent_id){
                 $conditions['Category.parent_id'] = $selected_parent_id;
                 $sub_category_list = $this->OnlineResource->Category->getChildrenOfCategoryWithId($selected_parent_id);
@@ -114,8 +101,6 @@ class OnlineResourcesController extends AppController {
                             ),
                     ),
             );
-            
-            
             
             //Add Sub category filter
             
@@ -181,10 +166,10 @@ class OnlineResourcesController extends AppController {
             $this->OnlineResource->create();
             if(!empty($this->data))
             {
-                if(!empty($this->data['OnlineResource']['image']['name']))
+                if(!empty($this->data['OnlineResource']['image']['name'])) // if there is an image save it all
                 {
                     $file = $this->data['OnlineResource']['image'];
-                    $ext = substr(strtolower(strrchr($file['name'], '.')), 1);
+                    $ext = substr(strtolower(strrchr($file['name'], '.')), 1); // get extension
                     $arr_ext = array('jpg', 'jpeg', 'png'); //set allowed extensions
 
                     $imageName =$file['name'];
@@ -195,12 +180,12 @@ class OnlineResourcesController extends AppController {
   			//create full filename with timestamp
                         $imageName = date('His') . $imageName;
                             
-                        if(move_uploaded_file($file['tmp_name'], WWW_ROOT . 'uploads/images/' . DS . $imageName))
+                        if(move_uploaded_file($file['tmp_name'], WWW_ROOT . 'uploads/images/' . DS . $imageName)) // move the image to the right folder
                         {
                             //prepare the filename for database entry
                             $this->request->data['OnlineResource']['image_path'] = $imageName;
-                            pr($imageName);
-                            if($this->OnlineResource->save($this->request->data)) 
+                            
+                            if($this->OnlineResource->save($this->request->data)) // save the data
                             {
                                 $this->Session->setFlash(__('The online resource with image has been saved'), 'default',array('class'=>'success'));
                                 $this->redirect(array('action'=>'index'));
@@ -216,7 +201,7 @@ class OnlineResourcesController extends AppController {
                         $this->Session->setFlash(__('You can only upload an image, no other file type.'));
                     }
                 }
-                elseif(empty($this->data['OnlineResource']['image']['name']))
+                elseif(empty($this->data['OnlineResource']['image']['name'])) // if there is no image
                 {
                     if($this->OnlineResource->save($this->request->data)) 
                     {
@@ -230,58 +215,10 @@ class OnlineResourcesController extends AppController {
                 }
             }
         }
+        //set the dropdown category menu
         $categories = $this->OnlineResource->Category->find('list');
         $this->set(compact('categories'));
-        
-        
-        /*//$this->OnlineResource->locale = array_keys( Configure::read('Site.languages') );
-	
-	if ($this->request->is('post')) {
-            $this->OnlineResource->create();
-           
-            if ($this->OnlineResource->save($this->request->data)) {
-                
-                //Check if image has been uploaded
-                if($this->request->data['OnlineResource']['image'])
-                {
-                    $img = $this->request->data['OnlineResource']['image']; //put the data into a var for easy use
-                    $imgName = $img['name'];
-                    
-                    $ext = substr(strtolower(strrchr($img['name'], '.')), 1); //get the extension
-                    $arr_ext = array('jpg', 'jpeg', 'gif', 'png'); //set allowed extensions
-                    
-                    //only process if the extension is valid
-                     if(in_array($ext, $arr_ext))
-                     {
-                        //do the actual uploading of the file. First arg is the tmp name, second arg is
-                        //where we are putting it
 
-                        move_uploaded_file($img['tmp_name'], WWW_ROOT . 'uploads/images/' . $img['name']);
-
-                           $this->Session->setFlash(__('The image has been saved'));
-                            //prepare the filename for database entry
-                           $this->request->data['OnlineResource']['image_path'] = $img['name'];
-                           print_r($this->request->data['OnlineResource']['image_path']);
-                           pr($this->request->data['OnlineResource']['image_path']);
-                        //}
-                        //else{
-                            
-                           // $this->Session->setFlash('There was a problem uploading file. Please try again.');
-                       // }
-                        
-                     }
-                }
-
-		$this->Session->setFlash(__('The online resource has been saved'));
-                $this->redirect(array('action' => 'index'));
-            } else {
-                
-		$this->Session->setFlash(__('The online resource could not be saved. Please, try again.'));
-            }
-
-	}
-	$categories = $this->OnlineResource->Category->find('list');
-        $this->set(compact('categories')); */
     }
     
  /**
