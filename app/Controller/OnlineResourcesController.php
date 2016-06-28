@@ -175,7 +175,66 @@ class OnlineResourcesController extends AppController {
     * @return void
     */
     public function admin_add() {
-	//$this->OnlineResource->locale = array_keys( Configure::read('Site.languages') );
+	
+        if($this->request->is('post'))
+        {
+            $this->OnlineResource->create();
+            if(!empty($this->data))
+            {
+                if(!empty($this->data['OnlineResource']['image']['name']))
+                {
+                    $file = $this->data['OnlineResource']['image'];
+                    $ext = substr(strtolower(strrchr($file['name'], '.')), 1);
+                    $arr_ext = array('jpg', 'jpeg', 'png'); //set allowed extensions
+
+                    $imageName =$file['name'];
+                    
+                    if(in_array($ext, $arr_ext))
+                    {
+                         
+  			//create full filename with timestamp
+                        $imageName = date('His') . $imageName;
+                            
+                        if(move_uploaded_file($file['tmp_name'], WWW_ROOT . 'uploads/images/' . DS . $imageName))
+                        {
+                            //prepare the filename for database entry
+                            $this->request->data['OnlineResource']['image_path'] = $imageName;
+                            pr($imageName);
+                            if($this->OnlineResource->save($this->request->data)) 
+                            {
+                                $this->Session->setFlash(__('The online resource with image has been saved'), 'default',array('class'=>'success'));
+                                $this->redirect(array('action'=>'index'));
+                            }
+                            else
+                            {
+                                $this->Session->setFlash(__('The online resource and image could not be saved. Please, try again.'));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $this->Session->setFlash(__('You can only upload an image, no other file type.'));
+                    }
+                }
+                elseif(empty($this->data['OnlineResource']['image']['name']))
+                {
+                    if($this->OnlineResource->save($this->request->data)) 
+                    {
+                        $this->Session->setFlash(__('The online resource has been saved.'), 'default',array('class'=>'success'));
+                        $this->redirect(array('action'=>'index'));
+                    }
+                }
+                else
+                {
+                    $this->Session->setFlash(__('The online resource could not be saved. Please, try again.'));
+                }
+            }
+        }
+        $categories = $this->OnlineResource->Category->find('list');
+        $this->set(compact('categories'));
+        
+        
+        /*//$this->OnlineResource->locale = array_keys( Configure::read('Site.languages') );
 	
 	if ($this->request->is('post')) {
             $this->OnlineResource->create();
@@ -222,7 +281,7 @@ class OnlineResourcesController extends AppController {
 
 	}
 	$categories = $this->OnlineResource->Category->find('list');
-        $this->set(compact('categories'));
+        $this->set(compact('categories')); */
     }
     
  /**
