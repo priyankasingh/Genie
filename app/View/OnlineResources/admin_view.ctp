@@ -77,8 +77,8 @@
 	</dl>
 
     <div class="related">
+        <?php if (!empty($onlineResources['Category'])): ?>
             <h3><?php echo __('Related Categories'); ?></h3>
-            <?php if (!empty($onlineResources['Category'])): ?>
             <table cellpadding = "0" cellspacing = "0">
             <tr>
                     <th><?php echo __('Id'); ?></th>
@@ -107,13 +107,14 @@
                     </tr>
             <?php endforeach; ?>
             </table>
-    <?php endif; ?>
+    
 
             <div class="actions">
                     <ul>
                             <li><?php echo $this->Html->link(__('New Category'), array('controller' => 'categories', 'action' => 'add')); ?> </li>
                     </ul>
             </div>
+        <?php endif; ?>
     </div>
 </div>
 

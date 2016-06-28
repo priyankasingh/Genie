@@ -221,33 +221,79 @@ class OnlineResourcesController extends AppController {
 
     }
     
- /**
- * admin_edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function admin_edit($id = null) {
-		if (!$this->OnlineResource->exists($id)) {
-			throw new NotFoundException(__('Online resource does not exist'));
-		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-                    if( $this->OnlineResource->save( $this->request->data ) ){
-				$this->Session->setFlash(__('The online resource has been saved'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The category could not be saved. Please, try again.'));
-			}
-                } else {
-                    $options = array('conditions' => array('OnlineResource.' . $this->OnlineResource->primaryKey => $id));
-                    $this->request->data = $this->OnlineResource->find('first', $options);
+    /**
+    * admin_edit method
+    *
+    * @throws NotFoundException
+    * @param string $id
+    * @return void
+    */
+    public function admin_edit($id = null) {
+            if (!$this->OnlineResource->exists($id)) {
+                    throw new NotFoundException(__('Online resource does not exist'));
+            }
+            if ($this->request->is('post') || $this->request->is('put')) {
+                
+                if(!empty($this->data))
+                {
+                    if(!empty($this->data['OnlineResource']['image']['name'])) // if there is an image save it all
+                    {
+                        $file = $this->data['OnlineResource']['image'];
+                        $ext = substr(strtolower(strrchr($file['name'], '.')), 1); // get extension
+                        $arr_ext = array('jpg', 'jpeg', 'png'); //set allowed extensions
+
+                        $imageName =$file['name'];
+
+                        if(in_array($ext, $arr_ext))
+                        {
+                            //create full filename with timestamp
+                            $imageName = date('His') . $imageName;
+
+                            if(move_uploaded_file($file['tmp_name'], WWW_ROOT . 'uploads/images/' . DS . $imageName)) // move the image to the right folder
+                            {
+                                //prepare the filename for database entry
+                                $this->request->data['OnlineResource']['image_path'] = $imageName;
+
+                                if($this->OnlineResource->save($this->request->data)) // save the data
+                                {
+                                    $this->Session->setFlash(__('The online resource with image has been saved'), 'default',array('class'=>'success'));
+                                    $this->redirect(array('action'=>'index'));
+                                }
+                                else
+                                {
+                                    $this->Session->setFlash(__('The online resource and image could not be saved. Please, try again.'));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            $this->Session->setFlash(__('You can only upload an image, no other file type.'));
+                        }
+                    }
+                    elseif(empty($this->data['OnlineResource']['image']['name'])) // if there is no image
+                    {
+                        if($this->OnlineResource->save($this->request->data)) 
+                        {
+                            $this->Session->setFlash(__('The online resource has been saved.'), 'default',array('class'=>'success'));
+                            $this->redirect(array('action'=>'index'));
+                        }
+                    }
+                    else
+                    {
+                        $this->Session->setFlash(__('The online resource could not be saved. Please, try again.'));
+                    }
+                
                 }
                 
-                $categories = $this->OnlineResource->Category->find('list');
-		$this->set(compact('categories'));
-                
-        }
+            } else {
+                $options = array('conditions' => array('OnlineResource.' . $this->OnlineResource->primaryKey => $id));
+                $this->request->data = $this->OnlineResource->find('first', $options);
+            }
+
+            $categories = $this->OnlineResource->Category->find('list');
+            $this->set(compact('categories'));
+
+    }
         
         
  /**
